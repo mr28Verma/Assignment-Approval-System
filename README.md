@@ -347,11 +347,14 @@ The User Login page provides access for Students, Professors, and HODs using uni
 
 <p align="center">
   <img
-    src="https://github-production-user-asset-6210df.s3.amazonaws.com/187727171/637667701-5fd44b54-dec7-4824-ae09-709f4b03acce.png"
+    src="[https://github-production-user-asset-6210df.s3.amazonaws.com/187727171/637667701-5fd44b54-dec7-4824-ae09-709f4b03acce.png](https://github.com/user-attachments/assets/27e78338-3583-496b-8436-581429ddf3cd)"
     width="900"
     alt="User Login"
   >
 </p>
+
+
+
 
 ### 3. Admin Login
 

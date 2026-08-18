@@ -347,7 +347,7 @@ The User Login page provides access for Students, Professors, and HODs using uni
 
 <p align="center">
   <img
-    src="https://kommodo.ai/i/rSFfsZ8cIHFqiHrEWZTx"
+    src="https://github.com/user-attachments/assets/4a6efadc-1e03-4833-8bb1-051b8e11d81e"
     width="900"
     alt="User Login"
   >

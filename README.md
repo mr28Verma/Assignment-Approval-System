@@ -1,4 +1,4 @@
-# 🎓 University Assignment Approval System
+# University Assignment Approval System
 
 A web-based assignment approval and tracking system designed to manage the complete workflow of student assignments between **Students, Professors, and HODs**.
 
@@ -6,7 +6,7 @@ The system allows students to submit assignments, professors to review and appro
 
 ---
 
-## 🚀 Features
+## Features
 
 ### 👨‍🎓 Student
 

@@ -89,6 +89,7 @@ The landing page provides separate login portals for:
 - 👨‍🎓 **User** — Access the student/professor portal.
 - 🛡️ **Admin** — Access the administrative portal.
 
+```html
 <p align="center">
   <img
     src="https://github.com/user-attachments/assets/7f038083-eb7f-40ff-b7e7-a0535ae762d8"
@@ -96,5 +97,5 @@ The landing page provides separate login portals for:
     alt="Login Portal"
   >
 </p>
-
+```
 

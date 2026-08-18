@@ -25,7 +25,7 @@ The system maintains an assignment tracker that records status transitions, time
 - Upload assignment documents
 - Track assignment status
 - View Professor and HOD remarks
-- Resubmit rejected assignments
+- Resubmit assignments rejected by the Professor
 - View assignment history
 - Update profile
 - Change password
@@ -66,35 +66,44 @@ The system maintains an assignment tracker that records status transitions, time
 ## Assignment Workflow
 
 ```text
-                         STUDENT
-                            |
-                            v
-                          Draft
-                            |
-                            v
-                        Submitted
-                            |
-                            v
-                    PROFESSOR REVIEW
-                       /          \
-                      /            \
-                     v              v
-                Approved         Rejected
-                     |
-                     v
-                 Forwarded
-                     |
-                     v
-                   HOD
-                  REVIEW
-                /        \
-               /          \
-              v            v
-          Approved       Rejected
-           (Final)        (Final)
+                              STUDENT
+                                 |
+                                 v
+                               Draft
+                                 |
+                                 v
+                             Submitted
+                                 |
+                                 v
+                        PROFESSOR REVIEW
+                         /            \
+                        /              \
+                       v                v
+                  Approved          Rejected
+                       |                |
+                       |                |
+                       |                v
+                       |          Student Resubmission
+                       |                |
+                       |                v
+                       |          Resubmitted
+                       |                |
+                       |                |
+                       +<---------------+
+                       |
+                       v
+                   Forwarded
+                       |
+                       v
+                   HOD REVIEW
+                   /        \
+                  /          \
+                 v            v
+            Approved       Rejected
+             (Final)        (Final)
 ```
 
-### Status Flow
+### Complete Status Flow
 
 ```text
 draft
@@ -103,19 +112,55 @@ draft
 submitted
   |
   v
-approved              <- Professor approval
+Professor Review
+  |
+  +-----------------------------+
+  |                             |
+  v                             v
+approved                     rejected
+  |                             |
+  |                             v
+  |                       Student Resubmission
+  |                             |
+  |                             v
+  |                        resubmitted
+  |                             |
+  |                             v
+  |                       Professor Review
+  |                             |
+  +-----------------------------+
   |
   v
-forwarded             <- Forwarded to HOD
+forwarded
+  |
+  v
+HOD Review
   |
   +-------------------+
   |                   |
   v                   v
 approved           rejected
-(Final HOD)       (Final HOD)
+(Final)            (Final)
 ```
 
-The assignment tracker preserves the complete history, allowing the system to distinguish the Professor's approval from the HOD's final approval.
+### Status Meaning
+
+| Status | Description |
+|---|---|
+| `draft` | Assignment is being prepared |
+| `submitted` | Student has submitted the assignment |
+| `approved` | Assignment approved at the current review stage |
+| `rejected` | Assignment rejected at the current review stage |
+| `resubmitted` | Student has resubmitted a previously rejected assignment |
+| `forwarded` | Professor has approved and forwarded the assignment to the HOD |
+
+The system maintains the complete status history using the Assignment Tracker.
+
+The first `approved` status represents Professor approval. After the Professor forwards the assignment, a subsequent `approved` status represents the HOD's final approval.
+
+A Professor rejection allows the Student to resubmit the assignment.
+
+A rejection by the HOD represents the final decision of the approval workflow.
 
 ---
 
@@ -208,7 +253,31 @@ forwarded
 approved
 ```
 
-The first `approved` represents Professor approval, while the `approved` status after `forwarded` represents the final HOD approval.
+For a rejected assignment that is resubmitted:
+
+```text
+draft
+  |
+  v
+submitted
+  |
+  v
+rejected
+  |
+  v
+resubmitted
+  |
+  v
+approved
+  |
+  v
+forwarded
+  |
+  v
+approved
+```
+
+The Assignment Tracker stores the complete history of each assignment status change.
 
 ### Department Schema
 
@@ -342,6 +411,25 @@ Each assignment is associated with an Assignment Tracker containing:
 - Status history
 - Timestamp
 - User responsible for the update
+
+### Assignment Resubmission
+
+If a Professor rejects an assignment, the Student can review the Professor's remarks, make the required changes, and resubmit the assignment.
+
+The workflow becomes:
+
+```text
+submitted
+    |
+    v
+rejected
+    |
+    v
+resubmitted
+    |
+    v
+Professor Review
+```
 
 ### OTP Verification
 
@@ -523,19 +611,19 @@ Assignment-Approval-System/
 
 ## Installation
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/mr28Verma/Assignment-Approval-System.git
 ```
 
-### 2. Navigate to the project
+### 2. Navigate to the Project
 
 ```bash
 cd Assignment-Approval-System
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 
 ```bash
 npm install
@@ -631,7 +719,7 @@ The application implements:
 
 **Saksham Verma**
 
-GitHub: https://github.com/mr28Verma
+GitHub: https://github.com/mr28Verma/Assignment-Approval-System
 
 ---
 

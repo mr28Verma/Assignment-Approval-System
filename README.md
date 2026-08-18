@@ -240,6 +240,10 @@ Department
 
 ### Backend
 
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" height="45" alt="Backend Technologies">
+</p>
+
 - Node.js
 - Express.js
 - MongoDB
@@ -247,12 +251,20 @@ Department
 
 ### Frontend
 
-- EJS
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=html,css,js" height="45" alt="Frontend Technologies">
+</p>
+
 - HTML5
 - CSS3
 - JavaScript
+- EJS
 
 ### Authentication and Security
+
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=js" height="45" alt="Authentication">
+</p>
 
 - JSON Web Token (JWT)
 - bcrypt
@@ -262,12 +274,39 @@ Department
 
 ### File Management
 
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=cloudinary" height="45" alt="Cloudinary">
+</p>
+
 - Multer
 - Cloudinary
 
 ### Email Services
 
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=nodejs" height="45" alt="Email Services">
+</p>
+
 - Nodemailer
+
+### Database
+
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=mongodb" height="45" alt="Database">
+</p>
+
+- MongoDB
+- Mongoose
+
+### Development Tools
+
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=vscode,git,github" height="45" alt="Development Tools">
+</p>
+
+- Visual Studio Code
+- Git
+- GitHub
 
 ### Configuration
 
@@ -352,9 +391,6 @@ The User Login page provides access for Students, Professors, and HODs using uni
     alt="User Login"
   >
 </p>
-
-
-
 
 ### 3. Admin Login
 
@@ -505,7 +541,7 @@ cd Assignment-Approval-System
 npm install
 ```
 
-### 4. Configure environment variables
+### 4. Configure Environment Variables
 
 Create a `.env` file in the project root:
 

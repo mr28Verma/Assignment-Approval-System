@@ -89,6 +89,8 @@ The landing page provides separate login portals for:
 - 👨‍🎓 **User** — Access the student/professor portal.
 - 🛡️ **Admin** — Access the administrative portal.
 
+
+
 ```html
 <p align="center">
   <img

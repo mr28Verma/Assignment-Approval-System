@@ -79,3 +79,16 @@ HOD Review         │
    ▼               ▼
 Approved        Rejected
 (Final)         (Final)
+
+# 📸 Screenshots
+
+## 1. Login Portal
+
+The landing page provides separate login portals for:
+
+- 👨‍🎓 **User** — Access the student/professor portal.
+- 🛡️ **Admin** — Access the administrative portal.
+
+<img width="1919" height="917" alt="image" src="https://github.com/user-attachments/assets/7f038083-eb7f-40ff-b7e7-a0535ae762d8" />
+
+

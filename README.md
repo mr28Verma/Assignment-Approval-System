@@ -99,3 +99,8 @@ The landing page provides separate login portals for:
     alt="Login Portal"
   >
 </p>
+
+<p align="center">
+  <img width="1919" height="9" alt="image" src="https://github.com/user-attachments/assets/5fd44b54-dec7-4824-ae09-709f4b03acce" />
+
+</p>

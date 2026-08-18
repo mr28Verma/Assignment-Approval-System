@@ -42,7 +42,7 @@ const assignmentSchema = new mongoose.Schema({
   },
   status:{
     type: String,
-    enum: ["draft","submitted","approved","rejected","resubmitted"],
+    enum: ["draft","submitted","approved","rejected","resubmitted","forwarded"],
     default: "draft"
   },
   remark: {

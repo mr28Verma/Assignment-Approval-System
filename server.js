@@ -18,6 +18,7 @@ const adminRoute = require('./route/adminRoute');
 const userRoute = require('./route/userRoute')
 const studentRoute = require('./route/studentRoute')
 const professorRoute = require('./route/pofessorRoute')
+const hodRoute = require('./route/hodRoute')
 
 
 const {login} = require('./controllers/serveLogin')
@@ -31,6 +32,7 @@ const app = express();
 
 app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'view'));
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/student/uploads', express.static('uploads'));
@@ -51,6 +53,7 @@ app.use('/admin',adminRoute)
 app.use('/user',userRoute)
 app.use('/student',studentRoute)
 app.use('/professor',professorRoute)
+app.use('/hod',hodRoute)
 
 app.get('/',login)
 app.get('/department/form',createdepartment)

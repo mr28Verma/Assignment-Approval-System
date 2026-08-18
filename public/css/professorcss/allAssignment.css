@@ -6,9 +6,15 @@
     --color-light-terracotta: #d4bba2;
     --color-rust-hover: #bf4d28;
     --color-white: #ffffff;
+
     --status-pending: #f5b400;
     --status-approved: #28a745;
     --status-rejected: #dc3545;
+    --status-resubmitted: #3b82f6;
+
+    --color-status-pending: #f5b40033;
+    --color-status-approved: #28a74533;
+    --color-status-rejected: #dc354533;
 }
 
 *,
@@ -21,86 +27,105 @@
 
 body {
     font-family: "Georgia", serif;
-    background: var(--color-cream);
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+    background: 
+        linear-gradient(135deg, transparent 0%, rgba(224, 122, 95, 0.03) 25%, transparent 50%, rgba(212, 187, 162, 0.04) 75%, transparent 100%),
+        linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4),
+        linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4) 20px 20px,
+        linear-gradient(to bottom, #fdf8f4, #f8f0e8);
+    background-size: 100% 100%, 40px 40px, 40px 40px, 100% 100%;
+    margin: 0;
+    padding: 3mm;
+    min-height: 100vh;
+    color: var(--color-dark-brown);
 }
 
 .dashboard-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     background: var(--color-white);
-    padding: 2rem 2.2rem;
-    border-radius: 14px;
-    border-top: 6px solid var(--color-terracotta);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    padding: 2rem 2.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    min-height: calc(100vh - 6mm);
+    border-radius: 0;
+    border-top: none;
 }
 
-/* THIS IS THE IMPORTANT FIX */
 .header-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    flex-wrap: nowrap;
+    gap: 16px;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--color-light-terracotta);
 }
 
-/* Prevent shrinking */
 .back-icon-btn {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 46px;
-    height: 46px;
+    width: 42px;
+    height: 42px;
     flex-shrink: 0;
-    background: #f6ebe4;
-    border: 1px solid #e5d2c7;
-    border-radius: 12px;
+    background: var(--color-cream);
+    border: 2px solid var(--color-light-terracotta);
+    border-radius: 0;
     color: var(--color-dark-brown);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .back-icon-btn:hover {
-    background: #eddfd6;
+    background: var(--color-terracotta);
+    color: var(--color-white);
+    transform: translateY(-2px);
 }
 
-/* THIS NOW WILL NOT BREAK INTO 2 LINES ANYMORE */
 .page-title {
-    font-size: 2.1rem;
-    font-weight: bold;
+    font-size: 2.4rem;
+    font-weight: 900;
     color: var(--color-dark-brown);
     white-space: nowrap;
-    flex-shrink: 0;
     line-height: 1.1;
+    margin: 0;
 }
 
 .filter-controls {
     display: flex;
     gap: 20px;
     margin: 20px 0;
+    align-items: center;
 }
 
 .filter-group label {
     font-weight: bold;
     color: var(--color-dark-brown);
+    margin-right: 8px;
 }
 
 .filter-controls select {
     padding: 8px 14px;
     border: 2px solid var(--color-light-terracotta);
-    border-radius: 8px;
+    border-radius: 0;
     background: var(--color-cream);
+    font-family: inherit;
+    color: var(--color-dark-brown);
 }
 
 .apply-btn {
-    padding: 10px 24px;
+    padding: 10px 20px;
     background: var(--color-terracotta);
     color: white;
-    border-radius: 8px;
+    border-radius: 0;
     border: none;
     font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.apply-btn:hover {
+    background: var(--color-rust-hover);
+    transform: translateY(-2px);
 }
 
 .submission-table {
@@ -116,15 +141,18 @@ body {
 }
 
 .submission-table th {
+    font-size: 1rem;
     background: var(--color-cream);
     font-weight: bold;
 }
 
 .status-badge {
-    padding: 7px 16px;
-    border-radius: 6px;
+    padding: 7px 14px;
+    border-radius: 0;
     font-weight: bold;
+    font-size: 0.9rem;
     text-transform: capitalize;
+    display: inline-block;
 }
 
 .badge-pending,
@@ -143,23 +171,50 @@ body {
     color: white;
 }
 
+.badge-resubmitted {
+    background: var(--status-resubmitted);
+    color: white;
+}
+
 .review-btn {
-    padding: 10px 22px;
+    padding: 8px 16px;
     background: var(--color-terracotta);
     color: white;
-    border-radius: 10px;
+    border-radius: 0;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.review-btn:hover {
+    background: var(--color-rust-hover);
+    transform: translateY(-2px);
 }
 
 .forward-btn {
-    background: var(--status-approved);
+    background: var(--status-approved) !important;
+}
+
+.forward-btn:hover {
+    background: #1e7f36 !important;
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px;
+    color: var(--color-light-brown);
+    font-style: italic;
 }
 
 @media(max-width: 900px) {
+    .dashboard-container {
+        padding: 1.5rem 1rem;
+    }
 
     .page-title {
+        font-size: 1.8rem;
         white-space: normal;
     }
 
@@ -173,15 +228,17 @@ body {
         background: white;
         margin-bottom: 18px;
         padding: 14px 12px;
-        border-radius: 12px;
+        border-radius: 0;
         border: 1px solid var(--color-light-terracotta);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
     .submission-table td {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 10px 4px;
+        border: none;
         border-bottom: 1px solid var(--color-light-terracotta);
         text-align: left;
     }
@@ -198,19 +255,19 @@ body {
     }
 
     .action-buttons-cell {
-        justify-content: center;
+        justify-content: flex-end;
         display: flex;
         margin-top: 10px;
     }
 
     .review-btn {
-        padding: 12px 26px;
+        padding: 10px 20px;
         font-size: 1rem;
-        border-radius: 12px;
     }
 
     .filter-controls {
         flex-direction: column;
+        align-items: stretch;
         gap: 12px;
     }
 }

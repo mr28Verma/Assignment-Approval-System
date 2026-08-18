@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,9 @@
             --color-white: #ffffff;
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
@@ -36,14 +39,15 @@
             background-color: var(--color-white);
             padding: 2rem 2.2rem;
             border-radius: 14px;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
             margin: 20px 0;
         }
 
         .settings-header {
             border-bottom: 2px solid var(--color-terracotta);
             margin-bottom: 2rem;
-            padding: 32px 0 22px;   /* more space above & below line */
+            padding: 32px 0 22px;
+            /* more space above & below line */
             position: relative;
         }
 
@@ -57,7 +61,8 @@
         .back-btn {
             position: absolute;
             right: 2.2rem;
-            top: 8px;              /* button clearly above the line */
+            top: 8px;
+            /* button clearly above the line */
             background-color: var(--color-terracotta);
             color: var(--color-white);
             padding: 8px 22px;
@@ -266,7 +271,7 @@
             padding-left: 20px;
             list-style: none;
         }
-        
+
         .password-requirements li {
             color: var(--color-terracotta);
             margin-bottom: 5px;
@@ -324,7 +329,7 @@
                 margin-left: auto;
                 margin-right: auto;
                 display: block;
-                margin-bottom: 15px; 
+                margin-bottom: 15px;
             }
 
             .update-button {
@@ -349,13 +354,17 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="settings-container">
 
         <div class="settings-header">
             <h1>Account Settings</h1>
-            <a href="<%= user.role=='Student'?'/student/dashboard':'/professor/dashboard' %>" class="back-btn">← Back</a>
+            <a href="<%= user.role == 'Student' ? '/student/dashboard' : user.role == 'Professor' ? '/professor/dashboard' : '/hod/dashboard' %>"
+                class="back-btn">
+                ← Back
+            </a>
         </div>
 
         <div class="settings-layout">
@@ -369,157 +378,152 @@
 
                 <% if (success) { %>
                     <h2 style="color: green;">Profile updated!</h2>
-                <% } %>
+                    <% } %>
 
-                <div class="section active" id="name-image-section">
-                    <h2 class="section-title">Update your name &amp; image here</h2>
-                    <p class="section-subtitle">Information added here will be displayed on the profile page.</p>
+                        <div class="section active" id="name-image-section">
+                            <h2 class="section-title">Update your name &amp; image here</h2>
+                            <p class="section-subtitle">Information added here will be displayed on the profile page.
+                            </p>
 
-                    <form action="/user/update/profile" method="POST" enctype="multipart/form-data">
-                        <div class="profile-section">
-                            <div class="profile-image-container">
-                                <label for="profileImageInput">
-                                    <div class="profile-image">
-                                        <img id="profilePreview" src="<%= user.profilePic %>" alt="Profile picture">
-                                        <div class="profile-image-overlay">
-                                            <svg viewBox="0 0 24 24">
-                                                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                                            </svg>
+                            <form action="/user/update/profile" method="POST" enctype="multipart/form-data">
+                                <div class="profile-section">
+                                    <div class="profile-image-container">
+                                        <label for="profileImageInput">
+                                            <div class="profile-image">
+                                                <img id="profilePreview" src="<%= user.profilePic %>"
+                                                    alt="Profile picture">
+                                                <div class="profile-image-overlay">
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </label>
+
+                                        <input type="file" name="profileImage" id="profileImageInput"
+                                            class="hidden-file-input" accept="image/jpeg,image/jpg,image/png"
+                                            onchange="handleImageUpload(event)">
+
+                                        <div class="upload-info">
+                                            Choose image to upload your profile picture.<br>
+                                            Supported extensions are (.jpg, .png).<br>
+                                            Maximum image size 2MB.
                                         </div>
                                     </div>
-                                </label>
 
-                                <input
-                                    type="file"
-                                    name="profileImage"
-                                    id="profileImageInput"
-                                    class="hidden-file-input"
-                                    accept="image/jpeg,image/jpg,image/png"
-                                    onchange="handleImageUpload(event)"
-                                >
+                                    <div class="form-section">
+                                        <div class="form-group">
+                                            <label for="fullName">Full Name*</label>
+                                            <input type="text" name="name" id="fullName" value="<%= user.name %>"
+                                                required>
+                                        </div>
 
-                                <div class="upload-info">
-                                    Choose image to upload your profile picture.<br>
-                                    Supported extensions are (.jpg, .png).<br>
-                                    Maximum image size 2MB.
+                                        <button type="submit" class="update-button">Update</button>
+                                    </div>
                                 </div>
+                            </form>
+                        </div>
+
+                        <div class="section" id="password-section">
+                            <h2 class="section-title">Change your account password</h2>
+
+                            <div class="password-requirements">
+                                <p>The password has to be</p>
+                                <ul>
+                                    <li>Minimum 8 characters long</li>
+                                    <li>One uppercase letter at least</li>
+                                    <li>One lowercase letter at least</li>
+                                    <li>One special character at least</li>
+                                    <li>One number</li>
+                                    <li>Maximum 32 characters long</li>
+                                </ul>
                             </div>
 
-                            <div class="form-section">
+                            <form action="/user/update/password" method="POST" onsubmit="return validatePassword()">
+
                                 <div class="form-group">
-                                    <label for="fullName">Full Name*</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        id="fullName"
-                                        value="<%= user.name %>"
-                                        required
-                                    >
+                                    <label for="newPassword">New password</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" name="newPassword" id="newPassword" required>
+                                        <span class="password-toggle" onclick="togglePassword('newPassword')">👁</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm password</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" name="confirmPassword" id="confirmPassword" required>
+                                        <span class="password-toggle"
+                                            onclick="togglePassword('confirmPassword')">👁</span>
+                                    </div>
                                 </div>
 
                                 <button type="submit" class="update-button">Update</button>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-
-                <div class="section" id="password-section">
-                    <h2 class="section-title">Change your account password</h2>
-
-                    <div class="password-requirements">
-                        <p>The password has to be</p>
-                        <ul>
-                            <li>Minimum 8 characters long</li>
-                            <li>One uppercase letter at least</li>
-                            <li>One lowercase letter at least</li>
-                            <li>One special character at least</li>
-                            <li>One number</li>
-                            <li>Maximum 32 characters long</li>
-                        </ul>
-                    </div>
-
-                    <form action="/user/update/password" method="POST" onsubmit="return validatePassword()">
-
-                        <div class="form-group">
-                            <label for="newPassword">New password</label>
-                            <div class="password-input-wrapper">
-                                <input type="password" name="newPassword" id="newPassword" required>
-                                <span class="password-toggle" onclick="togglePassword('newPassword')">👁</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="confirmPassword">Confirm password</label>
-                            <div class="password-input-wrapper">
-                                <input type="password" name="confirmPassword" id="confirmPassword" required>
-                                <span class="password-toggle" onclick="togglePassword('confirmPassword')">👁</span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="update-button">Update</button>
-                    </form>
-                </div>
 
             </div>
         </div>
     </div>
 
-<script>
-    function showSection(sectionName) {
-        document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-        document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+    <script>
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
 
-        if (sectionName === 'name-image') {
-            document.getElementById('name-image-section').classList.add('active');
-            document.querySelectorAll('.sidebar-item')[0].classList.add('active');
-        } else {
-            document.getElementById('password-section').classList.add('active');
-            document.querySelectorAll('.sidebar-item')[1].classList.add('active');
-        }
-    }
-
-    function togglePassword(id) {
-        const input = document.getElementById(id);
-        input.type = input.type === 'password' ? 'text' : 'password';
-    }
-
-    function validatePassword() {
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (newPassword !== confirmPassword) {
-            alert('Passwords do not match');
-            return false;
+            if (sectionName === 'name-image') {
+                document.getElementById('name-image-section').classList.add('active');
+                document.querySelectorAll('.sidebar-item')[0].classList.add('active');
+            } else {
+                document.getElementById('password-section').classList.add('active');
+                document.querySelectorAll('.sidebar-item')[1].classList.add('active');
+            }
         }
 
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,32}$/;
-
-        if (!regex.test(newPassword)) {
-            alert('Password does not meet the requirements');
-            return false;
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
         }
 
-        return true;
-    }
+        function validatePassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
 
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match');
+                return false;
+            }
 
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-        if (!validTypes.includes(file.type)) {
-            alert('Only JPG and PNG files are allowed');
-            event.target.value = '';
-            return;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,32}$/;
+
+            if (!regex.test(newPassword)) {
+                alert('Password does not meet the requirements');
+                return false;
+            }
+
+            return true;
         }
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('profilePreview').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-</script>
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                alert('Only JPG and PNG files are allowed');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profilePreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
 
 </body>
+
 </html>

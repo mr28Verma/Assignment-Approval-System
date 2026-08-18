@@ -8,10 +8,521 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/professorcss/dashboard.css">
+    <style>
+        :root {
+            --color-cream: #fdf8f4;
+            --color-dark-brown: #5d4037;
+            --color-light-brown: #8d6e63;
+            --color-terracotta: #e07a5f;
+            --color-light-terracotta: #d4bba2;
+            --color-rust-hover: #bf4d28;
+            --color-white: #ffffff;
+
+            --status-pending: #f5b400;
+            --status-approved: #28a745;
+            --status-rejected: #dc3545;
+            --status-resubmitted: #3b82f6;
+            --status-forwarded: #17a2b8;
+
+            --color-status-pending: #f5b40033;
+            --color-status-approved: #28a74533;
+            --color-status-rejected: #dc354533;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Georgia", serif;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(224, 122, 95, 0.03) 25%, transparent 50%, rgba(212, 187, 162, 0.04) 75%, transparent 100%),
+                linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4),
+                linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4) 20px 20px,
+                linear-gradient(to bottom, #fdf8f4, #f8f0e8);
+            background-size: 100% 100%, 40px 40px, 40px 40px, 100% 100%;
+            margin: 0;
+            padding: 3mm;
+            min-height: 100vh;
+            color: var(--color-dark-brown);
+            position: relative;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: var(--status-approved);
+            color: white;
+            padding: 14px 20px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .alert-banner button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            width: 100%;
+            max-width: 100%;
+            background: var(--color-white);
+            padding: 2rem 2.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            min-height: calc(100vh - 6mm);
+            border-radius: 0;
+            border-top: none;
+        }
+
+        /* Header */
+        .dashboard-header {
+            border-bottom: 3px solid var(--color-light-terracotta);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin: 0;
+        }
+
+        /* User Profile Dropdown Styles */
+        .user-profile {
+            position: relative;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 0;
+            transition: background-color 0.2s;
+        }
+
+        .user-info:hover {
+            background-color: #f5f5f5;
+        }
+
+        .user-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-dark-brown);
+            text-align: right;
+        }
+
+        .user-role {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--color-terracotta);
+            font-weight: bold;
+            text-align: right;
+        }
+
+        /* Avatar */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-terracotta);
+            overflow: hidden;
+            border-radius: 0;
+            clip-path: polygon(
+                0 0,
+                calc(100% - 6px) 0,
+                100% 6px,
+                100% 100%,
+                6px 100%,
+                0 calc(100% - 6px)
+            );
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 0;
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background-color: white;
+            border-radius: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            color: var(--color-dark-brown);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            font-size: 0.95rem;
+            border-radius: 0;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-item i {
+            font-size: 1.1rem;
+            color: var(--color-light-brown);
+        }
+
+        .logout-item i {
+            color: var(--color-terracotta);
+        }
+
+        .logout-item:hover {
+            background-color: #fff5f5;
+        }
+
+        /* Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            padding: 20px;
+            border-radius: 0;
+            border-left: 6px solid;
+            background: var(--color-white);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-card .count {
+            font-size: 2.4rem;
+            font-weight: 900;
+        }
+
+        .metric-card .label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-light-brown);
+        }
+
+        .pending {
+            border-color: var(--color-terracotta);
+            background: var(--color-status-pending);
+        }
+
+        .submitted {
+            border-color: var(--status-pending);
+            background: var(--color-status-pending);
+        }
+
+        .approved {
+            border-color: var(--status-approved);
+            background: var(--color-status-approved);
+        }
+
+        /* Recent Section */
+        .recent-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .recent-section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .view-all-link {
+            padding: 10px 20px;
+            background: var(--color-terracotta);
+            color: white;
+            border-radius: 0;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-link:hover {
+            background: var(--color-rust-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Filters */
+        .filter-controls {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .filter-controls select {
+            padding: 8px 14px;
+            border: 2px solid var(--color-light-terracotta);
+            border-radius: 0;
+            background: var(--color-cream);
+            font-family: inherit;
+            color: var(--color-dark-brown);
+        }
+
+        .apply-btn {
+            padding: 10px 20px;
+            background: var(--color-terracotta);
+            color: white;
+            border-radius: 0;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background: var(--color-rust-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Table */
+        .submission-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .submission-table th,
+        .submission-table td {
+            padding: 14px;
+            border-bottom: 1px solid var(--color-light-terracotta);
+            text-align: center;
+        }
+
+        .submission-table th {
+            font-size: 1rem;
+            background: var(--color-cream);
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 7px 14px;
+            border-radius: 0;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+
+        .badge-pending,
+        .badge-submitted {
+            background: var(--status-pending);
+            color: #4a3d00;
+        }
+
+        .badge-approved {
+            background: var(--status-approved);
+            color: white;
+        }
+
+        .badge-rejected {
+            background: var(--status-rejected);
+            color: white;
+        }
+
+        .badge-resubmitted {
+            background: var(--status-resubmitted);
+            color: white;
+        }
+
+        .badge-forwarded {
+            background: var(--status-forwarded);
+            color: white;
+        }
+
+        .review-btn {
+            padding: 8px 16px;
+            background: var(--color-terracotta);
+            color: white;
+            border-radius: 0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .review-btn:hover {
+            background: var(--color-rust-hover);
+            transform: translateY(-2px);
+        }
+
+        .forward-btn {
+            background: var(--status-approved) !important;
+        }
+
+        .forward-btn:hover {
+            background: #1e7f36 !important;
+        }
+
+        .forwarded-text {
+            color: var(--status-forwarded);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: var(--color-light-brown);
+            font-style: italic;
+        }
+
+        /* Responsive Layout */
+        @media(max-width: 900px) {
+            .dashboard-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .user-info {
+                flex-direction: row-reverse;
+                gap: 8px;
+            }
+
+            .user-name {
+                font-size: 0.9rem;
+            }
+
+            .user-role {
+                font-size: 0.7rem;
+            }
+
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr !important;
+                gap: 18px;
+            }
+
+            .metric-card {
+                width: 100%;
+                padding: 22px;
+                text-align: left;
+            }
+
+            .submission-table thead {
+                display: none;
+            }
+
+            .submission-table tr {
+                display: block;
+                width: 100%;
+                background: white;
+                margin-bottom: 18px;
+                padding: 14px 12px;
+                border-radius: 0;
+                border: 1px solid var(--color-light-terracotta);
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            .submission-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 4px;
+                border: none;
+                border-bottom: 1px solid var(--color-light-terracotta);
+            }
+
+            .submission-table td:last-child {
+                border-bottom: none;
+            }
+
+            .submission-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: var(--color-dark-brown);
+            }
+
+            .action-buttons-cell {
+                justify-content: flex-end;
+                margin-top: 10px;
+            }
+
+            .review-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <div class="dashboard-container">
+
+        <% if (typeof success !== 'undefined' && success === 'forwarded') { %>
+            <div class="alert-banner" id="successBanner">
+                <span><i class="fa-solid fa-circle-check"></i> Assignment successfully forwarded to Head of Department (HOD).</span>
+                <button onclick="document.getElementById('successBanner').style.display='none'">&times;</button>
+            </div>
+        <% } %>
 
         <div class="dashboard-header">
             <div class="header-top">
@@ -23,7 +534,7 @@
                             <div class="user-role">PROFESSOR</div>
                         </div>
                         <div class="user-avatar">
-                            <img src="<%= profilePic %>" alt="Professor's Profile Picture">
+                            <img src="<%= profilePic %>" alt="Professor's Profile Picture" onerror="this.src='<%= profilePic %>'">
                         </div>
                     </div>
                     <div class="dropdown-menu" id="dropdownMenu">
@@ -40,17 +551,17 @@
 
         <div class="metrics-grid">
             <div class="metric-card pending">
-                <div class="count">0</div>
+                <div class="count"><%= review %></div>
                 <div class="label">Pending Reviews</div>
             </div>
 
             <div class="metric-card submitted">
-                <div class="count">0</div>
+                <div class="count"><%= totalSubmission %></div>
                 <div class="label">Total Submitted</div>
             </div>
 
             <div class="metric-card approved">
-                <div class="count">0</div>
+                <div class="count"><%= approved %></div>
                 <div class="label">Already Approved</div>
             </div>
         </div>
@@ -70,6 +581,7 @@
                             <option value="all">All Assignments</option>
                             <option value="pending">Pending Review</option>
                             <option value="approved">Approved</option>
+                            <option value="forwarded">Forwarded to HOD</option>
                             <option value="rejected">Rejected</option>
                         </select>
                     </div>
@@ -90,9 +602,9 @@
 
                 <tbody>
 
-                    <% if (assignment.length === 0) { %>
+                    <% if (!assignment || assignment.length === 0) { %>
 
-                    <tr>
+                    <tr class="no-assignments">
                         <td colspan="5" class="no-data">No Assignments Found</td>
                     </tr>
 
@@ -115,9 +627,11 @@
 
                         <td data-label="Review Actions" class="action-buttons-cell">
                             <% if (a.status === "approved") { %>
-                            <a href="/professor/forward/<%= a._id %>" class="review-btn forward-btn">Forward</a>
+                                <a href="/professor/forward/<%= a._id %>" class="review-btn forward-btn">Forward</a>
+                            <% } else if (a.status === "forwarded") { %>
+                                <span class="forwarded-text"><i class="fa-solid fa-check-double"></i> Sent to HOD</span>
                             <% } else { %>
-                            <a href="/professor/review/<%= a._id %>" class="review-btn">Review</a>
+                                <a href="/professor/review/<%= a._id %>" class="review-btn">Review</a>
                             <% } %>
                         </td>
                     </tr>
@@ -134,7 +648,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Dropdown menu functionality
             const userProfileBtn = document.getElementById('userProfileBtn');
             const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -143,7 +656,6 @@
                 dropdownMenu.classList.toggle('show');
             });
 
-            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 if (!userProfileBtn.contains(e.target)) {
                     dropdownMenu.classList.remove('show');

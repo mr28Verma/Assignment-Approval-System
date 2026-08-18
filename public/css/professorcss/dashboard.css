@@ -11,6 +11,10 @@
     --status-approved: #28a745;
     --status-rejected: #dc3545;
     --status-resubmitted: #3b82f6;
+
+    --color-status-pending: #f5b40033;
+    --color-status-approved: #28a74533;
+    --color-status-rejected: #dc354533;
 }
 
 *,
@@ -23,20 +27,36 @@
 
 body {
     font-family: "Georgia", serif;
-    background: var(--color-cream);
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+    background: 
+        linear-gradient(135deg, transparent 0%, rgba(224, 122, 95, 0.03) 25%, transparent 50%, rgba(212, 187, 162, 0.04) 75%, transparent 100%),
+        linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4),
+        linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4) 20px 20px,
+        linear-gradient(to bottom, #fdf8f4, #f8f0e8);
+    background-size: 100% 100%, 40px 40px, 40px 40px, 100% 100%;
+    margin: 0;
+    padding: 3mm;
+    min-height: 100vh;
+    color: var(--color-dark-brown);
+    position: relative;
 }
 
+/* Main Container - Sharp Edges & Full Width */
 .dashboard-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     background: var(--color-white);
-    padding: 2rem 2.2rem;
-    border-radius: 14px;
-    border-top: 6px solid var(--color-terracotta);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    padding: 2rem 2.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    min-height: calc(100vh - 6mm);
+    border-radius: 0;
+    border-top: none;
+}
+
+/* Header */
+.dashboard-header {
+    border-bottom: 3px solid var(--color-light-terracotta);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .header-top {
@@ -46,8 +66,14 @@ body {
 }
 
 .dashboard-header h1 {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.4rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+.status-badge.badge-forwarded {
+    background: #17a2b8;
+    color: white;
 }
 
 /* User Profile Dropdown Styles */
@@ -61,7 +87,7 @@ body {
     gap: 12px;
     cursor: pointer;
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 0;
     transition: background-color 0.2s;
 }
 
@@ -84,32 +110,38 @@ body {
     text-align: right;
 }
 
+/* Sharp Cut Profile Avatar */
 .user-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    /* Retained background for fallback in case image fails to load */
     background-color: var(--color-terracotta);
-    /* Removed text alignment/display for text initial */
-    overflow: hidden; /* Ensures the image is clipped to the circle */
+    overflow: hidden;
+    border-radius: 0;
+    clip-path: polygon(
+        0 0,
+        calc(100% - 6px) 0,
+        100% 6px,
+        100% 100%,
+        6px 100%,
+        0 calc(100% - 6px)
+    );
 }
 
-/* MODIFICATION: Added style for the image inside the avatar container */
 .user-avatar img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the entire avatar area without distortion */
-    border-radius: 50%; /* Just to be safe, though parent border-radius should handle it */
+    object-fit: cover;
     display: block;
+    border-radius: 0;
 }
 
+/* Dropdown */
 .dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: 110%;
     right: 0;
-    margin-top: 8px;
     background-color: white;
-    border-radius: 8px;
+    border-radius: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     min-width: 180px;
     opacity: 0;
@@ -134,14 +166,7 @@ body {
     text-decoration: none;
     transition: background-color 0.2s;
     font-size: 0.95rem;
-}
-
-.dropdown-item:first-child {
-    border-radius: 8px 8px 0 0;
-}
-
-.dropdown-item:last-child {
-    border-radius: 0 0 8px 8px;
+    border-radius: 0;
 }
 
 .dropdown-item:hover {
@@ -161,102 +186,121 @@ body {
     background-color: #fff5f5;
 }
 
-.header-content {
-    margin-top: 10px;
-}
-
+/* Metrics Cards - Sharp Edges */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
-    margin: 30px 0;
+    margin-bottom: 2rem;
 }
 
 .metric-card {
-    padding: 18px;
-    border-radius: 12px;
+    padding: 20px;
+    border-radius: 0;
     border-left: 6px solid;
     background: var(--color-white);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .metric-card .count {
-    font-size: 2.2rem;
-    font-weight: bold;
+    font-size: 2.4rem;
+    font-weight: 900;
 }
 
 .metric-card .label {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: var(--color-light-brown);
 }
 
 .pending {
     border-color: var(--color-terracotta);
-    background: #e07a5f22;
+    background: var(--color-status-pending);
 }
 
 .submitted {
     border-color: var(--status-pending);
-    background: #f5b40022;
+    background: var(--color-status-pending);
 }
 
 .approved {
     border-color: var(--status-approved);
-    background: #28a74522;
+    background: var(--color-status-approved);
 }
 
+/* Recent Section */
 .recent-section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 1rem;
+}
+
+.recent-section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
 }
 
 .view-all-link {
-    padding: 8px 16px;
+    padding: 10px 20px;
     background: var(--color-terracotta);
     color: white;
-    border-radius: 8px;
+    border-radius: 0;
     text-decoration: none;
-    font-weight: 600;
-    transition: 0.2s ease;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .view-all-link:hover {
-    background: #ff7a00;
+    background: var(--color-rust-hover);
+    transform: translateY(-2px);
 }
 
+/* Filters */
 .filter-controls {
     display: flex;
     gap: 20px;
     margin: 20px 0;
+    align-items: center;
 }
 
 .filter-group label {
     font-weight: bold;
+    margin-right: 8px;
 }
 
 .filter-controls select {
     padding: 8px 14px;
     border: 2px solid var(--color-light-terracotta);
-    border-radius: 8px;
+    border-radius: 0;
     background: var(--color-cream);
+    font-family: inherit;
+    color: var(--color-dark-brown);
 }
 
 .apply-btn {
     padding: 10px 20px;
     background: var(--color-terracotta);
     color: white;
-    border-radius: 8px;
+    border-radius: 0;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .apply-btn:hover {
-    background: #ff7a00;
+    background: var(--color-rust-hover);
+    transform: translateY(-2px);
 }
 
+/* Table - Sharp Edges */
 .submission-table {
     width: 100%;
     border-collapse: collapse;
@@ -277,10 +321,11 @@ body {
 
 .status-badge {
     padding: 7px 14px;
-    border-radius: 6px;
+    border-radius: 0;
     font-weight: bold;
     font-size: 0.9rem;
     text-transform: capitalize;
+    display: inline-block;
 }
 
 .badge-pending,
@@ -305,17 +350,20 @@ body {
 }
 
 .review-btn {
-    padding: 8px 14px;
+    padding: 8px 16px;
     background: var(--color-terracotta);
     color: white;
-    border-radius: 6px;
+    border-radius: 0;
     text-decoration: none;
     font-size: 0.95rem;
-    transition: 0.2s ease;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
 }
 
 .review-btn:hover {
-    background: #ff7a00;
+    background: var(--color-rust-hover);
+    transform: translateY(-2px);
 }
 
 .forward-btn {
@@ -333,14 +381,14 @@ body {
     font-style: italic;
 }
 
+/* Responsive Layout */
 @media(max-width: 900px) {
-
     .dashboard-container {
         padding: 1.5rem 1rem;
     }
 
     .dashboard-header h1 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
     }
 
     .user-info {
@@ -359,7 +407,6 @@ body {
     .user-avatar {
         width: 35px;
         height: 35px;
-        font-size: 1rem;
     }
 
     .metrics-grid {
@@ -371,7 +418,6 @@ body {
         width: 100%;
         padding: 22px;
         text-align: left;
-        border-radius: 14px;
     }
 
     .submission-table thead {
@@ -384,7 +430,7 @@ body {
         background: white;
         margin-bottom: 18px;
         padding: 14px 12px;
-        border-radius: 12px;
+        border-radius: 0;
         border: 1px solid var(--color-light-terracotta);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
@@ -392,6 +438,7 @@ body {
     .submission-table td {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 10px 4px;
         border: none;
         border-bottom: 1px solid var(--color-light-terracotta);
@@ -419,6 +466,7 @@ body {
 
     .filter-controls {
         flex-direction: column;
+        align-items: stretch;
         gap: 12px;
     }
 }

@@ -20,7 +20,7 @@ const trackerSchema = new mongoose.Schema({
       "submitted",
       "rejected",
       "resubmitted",
-      "forward-to-hod",
+      "forwarded",
       "approved"
     ],
     default: "draft"
@@ -35,7 +35,7 @@ const trackerSchema = new mongoose.Schema({
           "submitted",
           "rejected",
           "resubmitted",
-          "forward-to-hod",
+          "forwarded",
           "approved"
         ],
         required: true

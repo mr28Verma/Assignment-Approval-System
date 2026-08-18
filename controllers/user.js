@@ -33,7 +33,7 @@ async function moveToDashboard(req, res){
         res.redirect('/professor/dashboard')
     }
     else{
-        res.send("HOD dashboard")
+        res.redirect('/hod/dashboard')
     }  
     
 }

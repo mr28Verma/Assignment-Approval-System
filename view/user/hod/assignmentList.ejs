@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD - Department Assignment Oversight</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- HOD Specific CSS -->
+    <link rel="stylesheet" href="/css/hodcss/assignmentList.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- HEADER ROW -->
+        <div class="header-row">
+            <a href="/hod/dashboard" class="back-icon-btn" title="Go Back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+
+            <div class="title-group">
+                <h1 class="page-title">Department Assignments</h1>
+                <span class="subtitle">Overview & Final Approval Pipeline</span>
+            </div>
+        </div>
+
+        <!-- HOD ADVANCED FILTER CONTROLS -->
+        <form action="/hod/assignments/filter" method="POST" class="filter-controls">
+            
+            <!-- Filter by Status -->
+            <div class="filter-group">
+                <label for="statusSelect"><i class="fa-solid fa-filter"></i> Status:</label>
+                <select name="status" id="statusSelect">
+                    <option value="all" <%= currentFilters?.status === 'all' ? 'selected' : '' %>>All Statuses</option>
+                    <option value="pending" <%= currentFilters?.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                    <option value="forwarded" <%= currentFilters?.status === 'forwarded' ? 'selected' : '' %>>Forwarded to HOD</option>
+                    <option value="approved" <%= currentFilters?.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                    <option value="rejected" <%= currentFilters?.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                </select>
+            </div>
+
+            <!-- Filter by Assigned Professor / Faculty -->
+            <div class="filter-group">
+                <label for="facultySelect"><i class="fa-solid fa-user-tie"></i> Faculty:</label>
+                <select name="facultyId" id="facultySelect">
+                    <option value="all">All Faculty</option>
+                    <% if (faculties && faculties.length > 0) { %>
+                        <% faculties.forEach(f => { %>
+                            <option value="<%= f._id %>" <%= currentFilters?.facultyId == f._id ? 'selected' : '' %>>
+                                <%= f.name || f.username %>
+                            </option>
+                        <% }) %>
+                    <% } %>
+                </select>
+            </div>
+
+            <!-- Filter by Category -->
+            <div class="filter-group">
+                <label for="categorySelect"><i class="fa-solid fa-folder"></i> Category:</label>
+                <select name="category" id="categorySelect">
+                    <option value="all">All Categories</option>
+                    <option value="Lab Report" <%= currentFilters?.category === 'Lab Report' ? 'selected' : '' %>>Lab Report</option>
+                    <option value="Project" <%= currentFilters?.category === 'Project' ? 'selected' : '' %>>Project</option>
+                    <option value="Thesis" <%= currentFilters?.category === 'Thesis' ? 'selected' : '' %>>Thesis</option>
+                    <option value="Assignment" <%= currentFilters?.category === 'Assignment' ? 'selected' : '' %>>Assignment</option>
+                </select>
+            </div>
+
+            <button type="submit" class="apply-btn">
+                <i class="fa-solid fa-sliders"></i> Filter
+            </button>
+        </form>
+
+        <!-- ASSIGNMENTS OVERVIEW TABLE -->
+        <table class="submission-table">
+            <thead>
+                <tr>
+                    <th>Title & Category</th>
+                    <th>Student</th>
+                    <th>Assigned Faculty</th>
+                    <th>Status</th>
+                    <th>Submitted On</th>
+                    <th>HOD Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if (assignments && assignments.length > 0) { %>
+                    <% assignments.forEach(a => { %>
+                        <tr data-id="<%= a._id %>">
+
+                            <!-- TITLE & CATEGORY -->
+                            <td data-label="Title & Category">
+                                <div class="cell-title"><%= a.title %></div>
+                                <span class="category-tag"><%= a.category || 'General' %></span>
+                            </td>
+
+                            <!-- STUDENT -->
+                            <td data-label="Student">
+                                <div class="user-info-text">
+                                    <strong><%= a.student?.name || a.student_name || 'N/A' %></strong>
+                                    <small><%= a.student?.rollNo || '' %></small>
+                                </div>
+                            </td>
+
+                            <!-- ASSIGNED FACULTY -->
+                            <td data-label="Assigned Faculty">
+                                <%= a.professor?.name || a.professor_name || 'Unassigned' %>
+                            </td>
+
+                            <!-- STATUS BADGE -->
+                            <td data-label="Status">
+                                <span class="status-badge badge-<%= a.status %>">
+                                    <%= a.status ? (a.status.charAt(0).toUpperCase() + a.status.slice(1)) : 'N/A' %>
+                                </span>
+                            </td>
+
+                            <!-- SUBMISSION DATE -->
+                            <td data-label="Submitted On">
+                                <%= a.submit || a.createdAt %>
+                            </td>
+
+                            <!-- ACTION BUTTONS -->
+                            <td data-label="HOD Actions">
+                                <div class="action-buttons-cell">
+                                    
+                                    <!-- View Document -->
+                                    <a href="<%= a.upload_path %>" class="action-icon view-btn" title="View Document" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+
+                                    <!-- Download File -->
+                                    <a href="<%= a.download %>" class="action-icon download-btn" title="Download Document">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+
+                                    <!-- Review Decision Modal Trigger -->
+                                    <% if (a.status === 'forwarded' || a.status === 'pending') { %>
+                                        <button type="button" 
+                                                class="action-icon approve-btn review-modal-btn" 
+                                                data-id="<%= a._id %>" 
+                                                data-title="<%= a.title %>" 
+                                                data-action="approve" 
+                                                title="Accept Submission">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        </button>
+
+                                        <button type="button" 
+                                                class="action-icon reject-btn review-modal-btn" 
+                                                data-id="<%= a._id %>" 
+                                                data-title="<%= a.title %>" 
+                                                data-action="reject" 
+                                                title="Reject Submission">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                        </button>
+                                    <% } else { %>
+                                        <a href="/hod/review/<%= a._id %>" class="action-icon review-btn" title="View Review History">
+                                            <i class="fa-solid fa-file-lines"></i>
+                                        </a>
+                                    <% } %>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6" class="no-data">
+                            <i class="fa-solid fa-folder-open"></i> No department assignments match the criteria.
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- HOD REVIEW / DECISION MODAL -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <button type="button" class="close-button" id="closeModal">&times;</button>
+            <h2 id="modalTitle">Department Review</h2>
+            <p class="reviewing-text">Reviewing: <span id="assignmentTitleDisplay"></span></p>
+
+            <form id="reviewForm" action="/hod/assignment/decision" method="POST">
+                <input type="hidden" id="assignmentId" name="assignmentId">
+                <input type="hidden" id="reviewAction" name="action">
+
+                <div class="form-group">
+                    <label for="reviewRemarks">HOD Remarks / Notes:</label>
+                    <textarea id="reviewRemarks" name="remarks" rows="4" placeholder="Add official comments or revision instructions..." required></textarea>
+                </div>
+
+                <button type="submit" class="confirm-submit-btn" id="confirmBtn">Confirm Decision</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL JS LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('reviewModal');
+            const closeModal = document.getElementById('closeModal');
+            const assignmentTitleDisplay = document.getElementById('assignmentTitleDisplay');
+            const assignmentIdInput = document.getElementById('assignmentId');
+            const reviewActionInput = document.getElementById('reviewAction');
+            const modalTitle = document.getElementById('modalTitle');
+            const confirmBtn = document.getElementById('confirmBtn');
+
+            document.querySelectorAll('.review-modal-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const title = btn.dataset.title;
+                    const action = btn.dataset.action;
+
+                    assignmentIdInput.value = id;
+                    reviewActionInput.value = action;
+                    assignmentTitleDisplay.textContent = title;
+
+                    if (action === 'approve') {
+                        modalTitle.textContent = "Accept Submission";
+                        confirmBtn.textContent = "Approve Submission";
+                        confirmBtn.style.backgroundColor = "#28a745";
+                    } else {
+                        modalTitle.textContent = "Reject Submission";
+                        confirmBtn.textContent = "Reject Submission";
+                        confirmBtn.style.backgroundColor = "#dc3545";
+                    }
+
+                    modal.style.display = 'flex';
+                });
+            });
+
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>

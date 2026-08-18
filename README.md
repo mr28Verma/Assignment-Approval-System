@@ -69,10 +69,10 @@ Professor Review
 Approved        Rejected
    │               │
    ▼               │
-Forwarded           │
+Forwarded          │
    │               │
    ▼               │
-HOD Review          │
+HOD Review         │
    │               │
    ├───────────────┤
    │               │

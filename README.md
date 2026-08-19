@@ -6,6 +6,17 @@ The system allows students to submit assignments, professors to review and appro
 
 ---
 
+## Live Demo
+
+**Live Application:**  
+https://assignment-approval-system-eight.vercel.app/
+
+[Open Live Application](https://assignment-approval-system-eight.vercel.app/)
+
+The deployed application provides separate Student and Admin portals for accessing the assignment management system.
+
+---
+
 ## Overview
 
 The University Assignment Approval System provides a centralized platform for managing academic assignments.
@@ -81,13 +92,14 @@ The system maintains an assignment tracker that records status transitions, time
                        v                v
                   Approved          Rejected
                        |                |
-                       |                |
                        |                v
                        |          Student Resubmission
                        |                |
                        |                v
                        |          Resubmitted
                        |                |
+                       |                v
+                       |          Professor Review
                        |                |
                        +<---------------+
                        |
@@ -154,11 +166,11 @@ approved           rejected
 | `resubmitted` | Student has resubmitted a previously rejected assignment |
 | `forwarded` | Professor has approved and forwarded the assignment to the HOD |
 
-The system maintains the complete status history using the Assignment Tracker.
+The Assignment Tracker maintains the complete history of each assignment status change.
 
 The first `approved` status represents Professor approval. After the Professor forwards the assignment, a subsequent `approved` status represents the HOD's final approval.
 
-A Professor rejection allows the Student to resubmit the assignment.
+A Professor rejection allows the Student to review the remarks, make the required changes, and resubmit the assignment.
 
 A rejection by the HOD represents the final decision of the approval workflow.
 
@@ -253,7 +265,7 @@ forwarded
 approved
 ```
 
-For a rejected assignment that is resubmitted:
+For an assignment rejected by the Professor and subsequently resubmitted:
 
 ```text
 draft
@@ -416,8 +428,6 @@ Each assignment is associated with an Assignment Tracker containing:
 
 If a Professor rejects an assignment, the Student can review the Professor's remarks, make the required changes, and resubmit the assignment.
 
-The workflow becomes:
-
 ```text
 submitted
     |
@@ -474,7 +484,7 @@ The User Login page provides access for Students, Professors, and HODs using uni
 
 <p align="center">
   <img
-    src="https://github.com/user-attachments/assets/4a6efadc-1e03-4833-8bb1-051b8e11d81e"
+    src="https://github-production-user-asset-6210df.s3.amazonaws.com/187727171/637667701-5fd44b54-dec7-4824-ae09-709f4b03acce.png"
     width="900"
     alt="User Login"
   >
@@ -720,6 +730,8 @@ The application implements:
 **Saksham Verma**
 
 GitHub: https://github.com/mr28Verma/Assignment-Approval-System
+
+Live Application: https://assignment-approval-system-eight.vercel.app/
 
 ---
 

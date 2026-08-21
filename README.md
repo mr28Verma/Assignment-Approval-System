@@ -2,18 +2,18 @@
 
 A web-based assignment approval and tracking system designed to manage the complete lifecycle of university assignments between Students, Professors, and HODs.
 
-The system allows students to submit assignments, professors to review and approve or reject submissions, and HODs to provide the final approval after an assignment is forwarded by the professor.
+The system provides a centralized platform where assignments can be submitted, reviewed, approved, rejected, forwarded, resubmitted, and finally approved by the HOD.
 
 ---
 
 ## Live Demo
 
 **Live Application:**  
-https://assignment-approval-system-eight.vercel.app/
+https://university-assignment-approval-system-pdoh.onrender.com/
 
-[Open Live Application](https://assignment-approval-system-eight.vercel.app/)
+[Open Live Application](https://university-assignment-approval-system-pdoh.onrender.com/)
 
-The deployed application provides separate Student and Admin portals for accessing the assignment management system.
+The application uses a centralized authentication system and redirects authenticated users to the dashboard according to their assigned role.
 
 ---
 
@@ -21,9 +21,16 @@ The deployed application provides separate Student and Admin portals for accessi
 
 The University Assignment Approval System provides a centralized platform for managing academic assignments.
 
-Students can submit and track assignments, Professors can review and approve or reject submissions, and HODs can provide the final approval after an assignment has been forwarded.
+The system supports the complete assignment approval workflow:
 
-The system maintains an assignment tracker that records status transitions, timestamps, and the user responsible for each update.
+- Students submit assignments.
+- Professors review submitted assignments.
+- Professors can approve or reject assignments.
+- Rejected assignments can be resubmitted by students.
+- Approved assignments can be forwarded to the HOD.
+- HODs perform the final review.
+- HOD approval or rejection represents the final decision.
+- Assignment history is maintained using a dedicated tracker.
 
 ---
 
@@ -72,9 +79,18 @@ The system maintains an assignment tracker that records status transitions, time
 - Monitor department faculty
 - Track assignment status
 
+### Administrator
+
+- Administrative authentication
+- Administrative dashboard
+- Manage system users
+- Monitor departments
+- Monitor assignment activity
+- View overall system information
+
 ---
 
-## Assignment Workflow
+# Assignment Workflow
 
 ```text
                               STUDENT
@@ -115,7 +131,9 @@ The system maintains an assignment tracker that records status transitions, time
              (Final)        (Final)
 ```
 
-### Complete Status Flow
+---
+
+## Complete Status Flow
 
 ```text
 draft
@@ -155,32 +173,36 @@ approved           rejected
 (Final)            (Final)
 ```
 
-### Status Meaning
+---
+
+## Status Meaning
 
 | Status | Description |
 |---|---|
 | `draft` | Assignment is being prepared |
 | `submitted` | Student has submitted the assignment |
-| `approved` | Assignment approved at the current review stage |
-| `rejected` | Assignment rejected at the current review stage |
+| `approved` | Assignment has been approved at the current review stage |
+| `rejected` | Assignment has been rejected at the current review stage |
 | `resubmitted` | Student has resubmitted a previously rejected assignment |
 | `forwarded` | Professor has approved and forwarded the assignment to the HOD |
 
-The Assignment Tracker maintains the complete history of each assignment status change.
+The `approved` status can occur at two different stages.
 
-The first `approved` status represents Professor approval. After the Professor forwards the assignment, a subsequent `approved` status represents the HOD's final approval.
+The first `approved` status represents **Professor approval**.
 
-A Professor rejection allows the Student to review the remarks, make the required changes, and resubmit the assignment.
+After the assignment is forwarded to the HOD, another `approved` status represents the **final HOD approval**.
+
+A Professor rejection does not permanently end the assignment workflow. The student can correct the assignment and resubmit it.
 
 A rejection by the HOD represents the final decision of the approval workflow.
 
 ---
 
-## Database Schema
+# Database Schema
 
 The application uses MongoDB with Mongoose for database management.
 
-### User Schema
+## User Schema
 
 ```text
 User
@@ -199,7 +221,9 @@ User
  +-- profilePic
 ```
 
-### Assignment Schema
+---
+
+## Assignment Schema
 
 ```text
 Assignment
@@ -231,7 +255,9 @@ Assignment
  +-- remark
 ```
 
-### Assignment Tracker Schema
+---
+
+## Assignment Tracker Schema
 
 ```text
 Assignment Tracker
@@ -247,7 +273,9 @@ Assignment Tracker
       +-- updatedBy
 ```
 
-Example tracker history:
+The Assignment Tracker maintains the complete history of an assignment.
+
+Example:
 
 ```text
 draft
@@ -265,7 +293,32 @@ forwarded
 approved
 ```
 
-For an assignment rejected by the Professor and subsequently resubmitted:
+---
+
+## Resubmission Flow
+
+When a Professor rejects an assignment, the student can resubmit it.
+
+```text
+submitted
+    |
+    v
+rejected
+    |
+    v
+Student Reviews Remarks
+    |
+    v
+Student Corrects Assignment
+    |
+    v
+resubmitted
+    |
+    v
+Professor Review
+```
+
+Example tracker history:
 
 ```text
 draft
@@ -289,9 +342,11 @@ forwarded
 approved
 ```
 
-The Assignment Tracker stores the complete history of each assignment status change.
+This allows the system to preserve the complete assignment lifecycle.
 
-### Department Schema
+---
+
+## Department Schema
 
 ```text
 Department
@@ -317,9 +372,9 @@ Department
 
 ---
 
-## Technology Stack
+# Technology Stack
 
-### Backend
+## Backend
 
 <p align="left">
   <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" height="45" alt="Backend Technologies">
@@ -330,7 +385,9 @@ Department
 - MongoDB
 - Mongoose
 
-### Frontend
+---
+
+## Frontend
 
 <p align="left">
   <img src="https://skillicons.dev/icons?i=html,css,js" height="45" alt="Frontend Technologies">
@@ -341,19 +398,20 @@ Department
 - JavaScript
 - EJS
 
-### Authentication and Security
+---
 
-<p align="left">
-  <img src="https://skillicons.dev/icons?i=js" height="45" alt="Authentication">
-</p>
+## Authentication and Security
 
 - JSON Web Token (JWT)
 - bcrypt
 - Cookie-based authentication
 - Role-based authorization
 - OTP verification
+- Protected routes
 
-### File Management
+---
+
+## File Management
 
 <p align="left">
   <img src="https://skillicons.dev/icons?i=cloudinary" height="45" alt="Cloudinary">
@@ -362,24 +420,29 @@ Department
 - Multer
 - Cloudinary
 
-### Email Services
+---
 
-<p align="left">
-  <img src="https://skillicons.dev/icons?i=nodejs" height="45" alt="Email Services">
-</p>
+## Email Services
 
 - Nodemailer
+- OTP email verification
+- Assignment status notifications
+- Assignment forwarding notifications
 
-### Database
+---
+
+## Database
 
 <p align="left">
-  <img src="https://skillicons.dev/icons?i=mongodb" height="45" alt="Database">
+  <img src="https://skillicons.dev/icons?i=mongodb" height="45" alt="MongoDB">
 </p>
 
 - MongoDB
 - Mongoose
 
-### Development Tools
+---
+
+## Development Tools
 
 <p align="left">
   <img src="https://skillicons.dev/icons?i=vscode,git,github" height="45" alt="Development Tools">
@@ -389,31 +452,62 @@ Department
 - Git
 - GitHub
 
-### Configuration
+---
+
+## Configuration
 
 - dotenv
+- Environment variables
 
 ---
 
-## Key Features
+# Key Features
 
-### Role-Based Authentication
+## Single Login Portal
 
-The system provides separate access based on the user's role.
+The system provides a centralized login portal for authentication.
 
 ```text
-                    Authentication
-                          |
-             +------------+------------+
-             |            |            |
-             v            v            v
-          Student      Professor       HOD
-             |            |            |
-             v            v            v
-        Student UI   Professor UI    HOD UI
+                    Login Portal
+                         |
+                         v
+                  Authentication
+                         |
+              +----------+----------+
+              |          |           |
+              v          v           v
+           Student   Professor      HOD
+              |          |           |
+              v          v           v
+         Student UI  Professor UI  HOD UI
 ```
 
-### Assignment Tracking
+The authenticated user's role determines which dashboard and protected features are available.
+
+---
+
+## Role-Based Access Control
+
+Each role has access to its respective dashboard and functionality.
+
+```text
+                         Login
+                           |
+                           v
+                    Authentication
+                           |
+              +------------+------------+
+              |            |            |
+              v            v            v
+           Student      Professor       HOD
+              |            |            |
+              v            v            v
+         Student UI   Professor UI    HOD UI
+```
+
+---
+
+## Assignment Tracking
 
 Each assignment is associated with an Assignment Tracker containing:
 
@@ -424,32 +518,54 @@ Each assignment is associated with an Assignment Tracker containing:
 - Timestamp
 - User responsible for the update
 
-### Assignment Resubmission
+---
 
-If a Professor rejects an assignment, the Student can review the Professor's remarks, make the required changes, and resubmit the assignment.
+## Assignment Resubmission
+
+If a Professor rejects an assignment, the Student can:
+
+1. View the rejection.
+2. Read the Professor's remarks.
+3. Modify the assignment.
+4. Resubmit the assignment.
+5. Send it back for Professor review.
 
 ```text
-submitted
-    |
-    v
-rejected
-    |
-    v
-resubmitted
-    |
-    v
+Professor Rejects
+       |
+       v
+Student Views Remarks
+       |
+       v
+Student Corrects Assignment
+       |
+       v
+Resubmits
+       |
+       v
 Professor Review
 ```
 
-### OTP Verification
+---
 
-OTP verification is used for sensitive operations such as assignment approval and rejection.
+## OTP Verification
 
-### File Upload
+OTP verification is used for sensitive operations such as:
+
+- Password reset
+- Assignment verification
+- Assignment approval
+- Assignment rejection
+
+---
+
+## File Upload
 
 Assignment documents and profile images are uploaded using Multer and stored using Cloudinary.
 
-### Email Notifications
+---
+
+## Email Notifications
 
 Nodemailer is used for:
 
@@ -458,17 +574,19 @@ Nodemailer is used for:
 - Assignment status notifications
 - Assignment forwarding notifications
 
-### Password Security
+---
+
+## Password Security
 
 Passwords are hashed using bcrypt before being stored in the database.
 
 ---
 
-## Screenshots
+# Screenshots
 
-### 1. Login Portal
+## 1. Login Portal
 
-The landing page provides separate portals for User and Admin access.
+The application provides a centralized login portal for authentication.
 
 <p align="center">
   <img
@@ -478,19 +596,9 @@ The landing page provides separate portals for User and Admin access.
   >
 </p>
 
-### 2. User Login
+---
 
-The User Login page provides access for Students, Professors, and HODs using university credentials.
-
-<p align="center">
-  <img
-    src="https://github-production-user-asset-6210df.s3.amazonaws.com/187727171/637667701-5fd44b54-dec7-4824-ae09-709f4b03acce.png"
-    width="900"
-    alt="User Login"
-  >
-</p>
-
-### 3. Admin Login
+## 2. Admin Login
 
 <p align="center">
   <img
@@ -500,7 +608,9 @@ The User Login page provides access for Students, Professors, and HODs using uni
   >
 </p>
 
-### 4. Admin Dashboard
+---
+
+## 3. Admin Dashboard
 
 <p align="center">
   <img
@@ -510,7 +620,9 @@ The User Login page provides access for Students, Professors, and HODs using uni
   >
 </p>
 
-### 5. Student Dashboard
+---
+
+## 4. Student Dashboard
 
 <p align="center">
   <img
@@ -520,7 +632,9 @@ The User Login page provides access for Students, Professors, and HODs using uni
   >
 </p>
 
-### 6. Professor Dashboard
+---
+
+## 5. Professor Dashboard
 
 <p align="center">
   <img
@@ -530,7 +644,9 @@ The User Login page provides access for Students, Professors, and HODs using uni
   >
 </p>
 
-### 7. HOD Dashboard
+---
+
+## 6. HOD Dashboard
 
 <p align="center">
   <img
@@ -540,9 +656,11 @@ The User Login page provides access for Students, Professors, and HODs using uni
   >
 </p>
 
-### 8. Student Assignment Tracking
+---
 
-Students can track the current status and history of their assignments.
+## 7. Student Assignment Tracking
+
+Students can track the current status and complete history of their assignments.
 
 <p align="center">
   <img
@@ -552,9 +670,11 @@ Students can track the current status and history of their assignments.
   >
 </p>
 
-### 9. Professor Assignment Review
+---
 
-Professors can review submitted assignments and perform approval or rejection actions.
+## 8. Professor Assignment Review
+
+Professors can review submitted assignments, add remarks, and approve or reject assignments.
 
 <p align="center">
   <img
@@ -566,7 +686,7 @@ Professors can review submitted assignments and perform approval or rejection ac
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 Assignment-Approval-System/
@@ -619,29 +739,31 @@ Assignment-Approval-System/
 
 ---
 
-## Installation
+# Installation
 
-### 1. Clone the Repository
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/mr28Verma/Assignment-Approval-System.git
 ```
 
-### 2. Navigate to the Project
+## 2. Navigate to the Project
 
 ```bash
 cd Assignment-Approval-System
 ```
 
-### 3. Install Dependencies
+## 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 4. Configure Environment Variables
+---
 
-Create a `.env` file in the project root:
+# Environment Variables
+
+Create a `.env` file in the project root.
 
 ```env
 PORT=3000
@@ -662,15 +784,15 @@ Do not commit the `.env` file to GitHub.
 
 ---
 
-## Running the Application
+# Running the Application
 
-### Development
+## Development
 
 ```bash
 npm run dev
 ```
 
-### Normal Start
+## Production / Normal Start
 
 ```bash
 node server.js
@@ -684,7 +806,7 @@ http://localhost:3000
 
 ---
 
-## Requirements
+# Requirements
 
 Before running the application, make sure the following are available:
 
@@ -696,7 +818,7 @@ Before running the application, make sure the following are available:
 
 ---
 
-## Security
+# Security
 
 The application implements:
 
@@ -711,7 +833,7 @@ The application implements:
 
 ---
 
-## Future Improvements
+# Future Improvements
 
 - Real-time notifications
 - Advanced assignment search
@@ -719,22 +841,25 @@ The application implements:
 - Assignment analytics
 - Improved audit logging
 - Administrative user management
-- Production deployment
 - Automated email templates
 - Detailed assignment reporting
+- Enhanced notification system
+- Improved dashboard analytics
 
 ---
 
-## Author
+# Author
 
 **Saksham Verma**
 
-GitHub: https://github.com/mr28Verma/Assignment-Approval-System
+GitHub:  
+https://github.com/mr28Verma
 
-Live Application: https://assignment-approval-system-eight.vercel.app/
+Live Application:  
+https://university-assignment-approval-system-pdoh.onrender.com/
 
 ---
 
-## License
+# License
 
 This project was developed for educational and academic purposes.

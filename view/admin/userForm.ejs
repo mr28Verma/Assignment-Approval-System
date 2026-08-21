@@ -1,55 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal Registration Form</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/sidebar.css">
-    <link rel="stylesheet" href="/css/userForm.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0b0f17;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        #main-content-wrapper {
+            flex: 1;
+            padding: 2rem;
+            overflow-x: auto;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+            padding: 2rem;
+        }
+
+        .form-title {
+            margin-bottom: 2rem;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            border-color: #6366f1;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .role-label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .role-input {
+            display: none;
+        }
+
+        .role-span {
+            display: block;
+            padding: 0.75rem 1.25rem;
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .role-input:checked + .role-span {
+            background: #6366f1;
+            color: #ffffff;
+            border-color: #6366f1;
+        }
+
+        .btn-container {
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            background: #6366f1;
+            color: #ffffff;
+            border: none;
+            border-radius: 0px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+    </style>
 </head>
 
 <body>
-    <%- include('../partials/sidebar') %>
+    <div id="app-container">
+        <%- include('../partials/sidebar') %>
 
-    <div id="main-content-wrapper">
-        <div class="form-card">
-            <h2 class="form-title">Create New User Account</h2>
+        <main id="main-content-wrapper">
+            <div class="form-card">
+                <h2 class="form-title">Create New User Account</h2>
 
-            <h3 style="color: green;"><%= msg %></h3>
+                <% if (msg) { %>
+                    <h3 style="color: #34d399; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                        <%= msg %>
+                    </h3>
+                <% } %>
 
-            <form id="registration-form" action="/admin/user/create" method="post">
+                <form id="registration-form" action="/admin/user/create" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter full name" class="form-input">
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="name" required placeholder="Enter full name" class="form-input">
-                </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="name@university.edu" class="form-input">
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" name="email" required placeholder="name@university.edu" class="form-input">
-                </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••" class="form-input">
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" required placeholder="••••••••" class="form-input">
-                </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 555-5555" class="form-input">
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Phone Number</label>
-                    <input type="tel" name="phone" placeholder="(555) 555-5555" class="form-input">
-                </div>
+                    <div class="form-group">
+                        <label class="form-label" for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" required class="form-input">
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Date of Birth</label>
-                    <input type="date" name="dob" required class="form-input">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Department</label>
-                    <div class="select-wrapper">
-                        <select name="department" required class="form-input">
+                    <div class="form-group">
+                        <label class="form-label" for="department">Department</label>
+                        <select id="department" name="department" required class="form-input">
                             <option value="" disabled selected>Select a department</option>
                             <option value="CS">Computer Science</option>
                             <option value="EE">Electrical Engineering</option>
@@ -60,63 +194,43 @@
                             <option value="HI">History</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Mailing Address</label>
-                    <textarea name="address" rows="3" required placeholder="Enter full street address, city, and postal code" class="form-input"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Role</label>
-
-                    <div class="role-options">
-
-                        <label class="role-label">
-                            <input type="radio" name="role" value="Student" class="role-input" required>
-                            <span class="role-span">Student</span>
-                        </label>
-
-                        <label class="role-label">
-                            <input type="radio" name="role" value="Professor" class="role-input">
-                            <span class="role-span">Professor</span>
-                        </label>
-
-                        <label class="role-label">
-                            <input type="radio" name="role" value="Hod" class="role-input">
-                            <span class="role-span">HOD</span>
-                        </label>
-
+                    <div class="form-group">
+                        <label class="form-label" for="address">Mailing Address</label>
+                        <textarea id="address" name="address" rows="3" required placeholder="Enter full street address, city, and postal code" class="form-input"></textarea>
                     </div>
-                </div>
 
-                <div class="btn-container">
-                    <div id="message-box"></div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <div class="role-options">
+                            <label class="role-label">
+                                <input type="radio" name="role" value="Student" class="role-input" required>
+                                <span class="role-span">Student</span>
+                            </label>
+                            <label class="role-label">
+                                <input type="radio" name="role" value="Professor" class="role-input">
+                                <span class="role-span">Professor</span>
+                            </label>
+                            <label class="role-label">
+                                <input type="radio" name="role" value="Hod" class="role-input">
+                                <span class="role-span">HOD</span>
+                            </label>
+                        </div>
+                    </div>
 
-                    <button type="submit" class="btn-primary">
-                        Register User
-                    </button>
-                </div>
-
-            </form>
-        </div>
+                    <div class="btn-container">
+                        <button type="submit" class="btn-primary">Register User</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
 
     <script>
-        window.onload = () => {
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        };
-
-        function active(link) {
-            document.querySelectorAll('.nav-link-top, .nav-link-mobile').forEach(el => 
-                el.classList.remove('active-link')
-            );
-            link.classList.add('active-link');
-        }
+        window.addEventListener('load', function () {
+            if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+        });
     </script>
-
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/active.js"></script>
-
 </body>
 </html>

@@ -1,127 +1,190 @@
-<header class="header">
-  <div class="header-inner">
-
-    <h1 class="logo">
-      <span class="logo-accent">Admin</span>Portal
-    </h1>
-
-    <nav class="nav-desktop">
-      <a href="/admin/home" class="nav-link-top" onclick="setActive(this)">
-        <i data-lucide="layout-dashboard"></i>
-        <span class="hidden-lg">Dashboard Overview</span>
-        <span class="visible-lg">Dashboard</span>
-      </a>
-
-      <a href="/admin/department/list" class="nav-link-top" onclick="setActive(this)">
-        <i data-lucide="building-2"></i>
-        <span>Departments</span>
-      </a>
-
-      <a href="/admin/users" class="nav-link-top" onclick="setActive(this)">
-        <i data-lucide="users"></i>
-        <span>Users</span>
-      </a>
-
-      <a href="/admin/user-form" class="nav-link-top" onclick="setActive(this)">
-        <i data-lucide="user-plus"></i>
-        <span class="hidden-lg">Add User</span>
-        <span class="visible-lg">Add</span>
-      </a>
-
-      <a href="/department/form" class="nav-link-top" onclick="setActive(this)">
-        <i data-lucide="hard-hat"></i>
-        <span class="hidden-lg">Create Department</span>
-        <span class="visible-lg">Create Dept</span>
-      </a>
-    </nav>
-
-    <div class="user-controls">
-      <a id="logout-btn" href="/admin/logout">
-        <i data-lucide="log-out"></i>
-        <span>Logout</span>
-      </a>
-
-      <button class="menu-toggle" onclick="toggleMobileMenu()">
-        <i id="menu-icon" data-lucide="menu"></i>
-        <i id="close-icon" data-lucide="x" style="display:none;"></i>
-      </button>
+<aside class="sidebar-navigation">
+    <div class="sidebar-header">
+        <a href="/admin/home" class="logo">
+            <span class="logo-accent">Admin</span>Portal
+        </a>
+        <button type="button" class="menu-toggle" onclick="toggleMobileMenu()">
+            <i id="menu-icon" data-lucide="menu"></i>
+            <i id="close-icon" data-lucide="x" style="display:none;"></i>
+        </button>
     </div>
-  </div>
 
-  <nav id="mobile-nav">
-    <a href="/admin/home" class="nav-link-mobile">
-      <i data-lucide="layout-dashboard"></i><span>Dashboard Overview</span>
-    </a>
+    <nav id="mobile-nav" class="sidebar-nav">
+        <div class="nav-menu">
+            <a href="/admin/home" class="nav-link">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/admin/department/list" class="nav-link">
+                <i data-lucide="building-2"></i>
+                <span>Departments</span>
+            </a>
+            <a href="/admin/users" class="nav-link">
+                <i data-lucide="users"></i>
+                <span>Users</span>
+            </a>
+            <a href="/admin/user-form" class="nav-link">
+                <i data-lucide="user-plus"></i>
+                <span>Add User</span>
+            </a>
+            <a href="/department/form" class="nav-link">
+                <i data-lucide="hard-hat"></i>
+                <span>Create Dept</span>
+            </a>
+        </div>
 
-    <a href="/admin/department/list" class="nav-link-mobile">
-      <i data-lucide="building-2"></i><span>Departments</span>
-    </a>
+        <div class="sidebar-footer">
+            <a href="/admin/logout" class="nav-link logout-link">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+</aside>
 
-    <a href="/admin/users" class="nav-link-mobile">
-      <i data-lucide="users"></i><span>Users</span>
-    </a>
+<style>
+.sidebar-navigation {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    height: 100vh !important;
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    padding: 1.5rem 1rem !important;
+    background: #111827 !important;
+    border-right: 1px solid rgba(255,255,255,0.08) !important;
+    z-index: 1000 !important;
+}
 
-    <a href="/admin/user-form" class="nav-link-mobile">
-      <i data-lucide="user-plus"></i><span>Add User</span>
-    </a>
+.sidebar-navigation .sidebar-header {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 2rem !important;
+    padding: 0 0.5rem !important;
+}
 
-    <a href="/department/form" class="nav-link-mobile">
-      <i data-lucide="hard-hat"></i><span>Create Department</span>
-    </a>
-  </nav>
-</header>
+.sidebar-navigation .logo {
+    color: white !important;
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+.sidebar-navigation .logo-accent {
+    color: #8b7cf6 !important;
+}
+
+.sidebar-navigation .sidebar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    flex: 1 !important;
+}
+
+.sidebar-navigation .nav-menu {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+}
+
+.sidebar-navigation .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    color: #9ca3af !important;
+    background: transparent !important;
+    border-radius: 0px !important;
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+}
+
+.sidebar-navigation .nav-link:hover {
+    background: rgba(255,255,255,0.05) !important;
+    color: #ffffff !important;
+}
+
+.sidebar-navigation .nav-link.active-link {
+    background: #6366f1 !important;
+    color: #ffffff !important;
+}
+
+.sidebar-navigation .nav-link svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.sidebar-navigation .sidebar-footer {
+    margin-top: auto !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.sidebar-navigation .logout-link {
+    color: #ef4444 !important;
+}
+
+.sidebar-navigation .logout-link:hover {
+    background: rgba(239,68,68,0.1) !important;
+    color: #f87171 !important;
+}
+
+.sidebar-navigation .menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sidebar-navigation {
+        width: 100% !important;
+        min-width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        padding: 1rem !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .sidebar-navigation .menu-toggle { display: flex; }
+    .sidebar-navigation .sidebar-nav { display: none !important; }
+    .sidebar-navigation .sidebar-nav.open { display: flex !important; }
+}
+</style>
 
 <script>
-// Initialize Lucide icons
-document.addEventListener('DOMContentLoaded', function() {
-  lucide.createIcons();
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.lucide) { lucide.createIcons(); }
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll(".sidebar-navigation .nav-menu .nav-link");
+    links.forEach(link => {
+        if (link.getAttribute("href") === currentPath) {
+            link.classList.add("active-link");
+        }
+    });
 });
 
-// Toggle mobile menu
 function toggleMobileMenu() {
-  const mobileNav = document.getElementById('mobile-nav');
-  const menuIcon = document.getElementById('menu-icon');
-  const closeIcon = document.getElementById('close-icon');
-  
-  mobileNav.classList.toggle('open');
-  
-  if (mobileNav.classList.contains('open')) {
-    menuIcon.style.display = 'none';
-    closeIcon.style.display = 'block';
-  } else {
-    menuIcon.style.display = 'block';
-    closeIcon.style.display = 'none';
-  }
-  
-  lucide.createIcons();
-}
-
-// Set active link
-function setActive(element) {
-  // Remove active from all links
-  document.querySelectorAll('.nav-link-top, .nav-link-mobile').forEach(link => {
-    link.classList.remove('active-link');
-  });
-  
-  // Add active to clicked link
-  element.classList.add('active-link');
-  
-  // Close mobile menu if open
-  const mobileNav = document.getElementById('mobile-nav');
-  if (mobileNav.classList.contains('open')) {
-    toggleMobileMenu();
-  }
-}
-
-// Set active link based on current URL
-window.addEventListener('DOMContentLoaded', function() {
-  const currentPath = window.location.pathname;
-  const links = document.querySelectorAll('.nav-link-top, .nav-link-mobile');
-  
-  links.forEach(link => {
-    if (link.getAttribute('href') === currentPath) {
-      link.classList.add('active-link');
+    const nav = document.getElementById("mobile-nav");
+    const menu = document.getElementById("menu-icon");
+    const close = document.getElementById("close-icon");
+    if (!nav) return;
+    nav.classList.toggle("open");
+    if (nav.classList.contains("open")) {
+        menu.style.display = "none";
+        close.style.display = "block";
+    } else {
+        menu.style.display = "block";
+        close.style.display = "none";
     }
-  });
-});
+}
 </script>

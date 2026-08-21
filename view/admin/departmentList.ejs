@@ -1,166 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Department List</title>
-  <link rel="stylesheet" href="/css/departmentList.css">
-  <link rel="stylesheet" href="/css/sidebar.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department List</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0b0f17;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        #main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-x: auto;
+        }
+
+        #main-content h1 {
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .controls-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+        }
+
+        .search-container, .filter-container {
+            flex: 1;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        #search-input, #filter-select {
+            width: 100%;
+            height: 42px;
+            padding: 0 12px;
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0px;
+            outline: none;
+        }
+
+        #search-input:focus, #filter-select:focus {
+            border-color: #6366f1;
+        }
+
+        #mobile-search-btn {
+            height: 42px;
+            padding: 0 1.5rem;
+            border: none;
+            border-radius: 0px;
+            background: #6366f1;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #mobile-search-btn:hover {
+            background: #4f46e5;
+        }
+
+        .table-container {
+            width: 100%;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #1e293b;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem;
+            color: #cbd5e1;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+        }
+
+        tbody tr:hover {
+            background: #1a2230;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 0.45rem 0.8rem;
+            border: none;
+            border-radius: 0px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 0.4rem;
+        }
+
+        .edit-btn { background: #6366f1; color: white; }
+        .edit-btn:hover { background: #4f46e5; }
+        .delete-btn { background: #ef4444; color: white; }
+        .delete-btn:hover { background: #dc2626; }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 9999;
+        }
+
+        .popup {
+            width: 100%;
+            max-width: 500px;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup h2 {
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .popup label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .popup input, .popup select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0px;
+            outline: none;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-row button {
+            padding: 0.7rem 1.25rem;
+            border: none;
+            border-radius: 0px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #editForm button[type="submit"] { background: #6366f1; color: white; }
+        .delete-confirm { background: #ef4444; color: white; }
+        .cancel-btn { background: #374151; color: white; }
+        .cancel-btn:hover { background: #4b5563; }
+    </style>
 </head>
+
 <body>
 
-  <%- include('../partials/sidebar') %>
+    <div id="app-container">
+        <%- include('../partials/sidebar') %>
 
-  <main id="main-content">
-    <h1>All Departments</h1>
+        <main id="main-content">
+            <h1>All Departments</h1>
 
-    <form id="department-filters-form" class="controls-bar" method="post" action="/admin/department/search">
+            <form id="department-filters-form" class="controls-bar" method="post" action="/admin/department/search">
+                <div class="search-container">
+                    <label class="control-label" for="search-input">Search</label>
+                    <input type="text" id="search-input" name="search" placeholder="Search by department name">
+                </div>
 
-      <div class="search-container">
-        <label class="control-label">Search</label>
-        <input type="text" id="search-input" name="search" placeholder="Search by department name">
-      </div>
+                <div class="filter-container">
+                    <label class="control-label" for="filter-select">Filter by Type</label>
+                    <select id="filter-select" name="program_type">
+                        <option value="all">All</option>
+                        <option value="UG">Undergraduate (UG)</option>
+                        <option value="PG">Postgraduate (PG)</option>
+                        <option value="Research">Research</option>
+                    </select>
+                </div>
 
-      <div class="filter-container">
-        <label class="control-label">Filter by Type</label>
-        <div class="select-wrapper">
-          <select id="filter-select" name="program_type">
-            <option value="all">All</option>
-            <option value="UG">Undergraduate (UG)</option>
-            <option value="PG">Postgraduate (PG)</option>
-            <option value="Research">Research</option>
-          </select>
-        </div>
-      </div>
+                <button type="submit" id="mobile-search-btn">Search</button>
+            </form>
 
-      <button type="submit" id="mobile-search-btn" class="mobile-search-btn">Search</button>
-    </form>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Department Name</th>
-          <th>Program Type</th>
-          <th>Department Address</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% if (department && department.length > 0) { %>
-          <% department.forEach(d => { %>
-            <tr>
-              <td data-label="Department Name"><%= d.department_name %></td>
-              <td data-label="Program Type"><%= d.program_type %></td>
-              <td data-label="Department Address"><%= d.department_address %></td>
-              <td data-label="Action">
-                <button class="edit-btn"
-                  data-id="<%= d._id %>"
-                  data-name="<%= d.department_name %>"
-                  data-type="<%= d.program_type %>"
-                  data-address="<%= d.department_address %>">
-                  Edit
-                </button>
-
-                <button class="delete-btn"
-                  data-id="<%= d._id %>"
-                  data-name="<%= d.department_name %>">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          <% }) %>
-        <% } else { %>
-          <tr>
-            <td colspan="4" style="text-align:center;">No departments found.</td>
-          </tr>
-        <% } %>
-      </tbody>
-    </table>
-  </main>
-
-  <div class="popup-overlay" id="editPopup">
-    <div class="popup">
-      <h2>Edit Department</h2>
-      <form id="editForm" method="post" action="/admin/department/update">
-        <input type="hidden" id="editId" name="id">
-
-        <label>Department Name</label>
-        <input type="text" id="editName" name="department_name" required>
-
-        <label>Program Type</label>
-        <select id="editType" name="program_type" required>
-          <option value="UG">Undergraduate (UG)</option>
-          <option value="PG">Postgraduate (PG)</option>
-          <option value="Research">Research</option>
-        </select>
-
-        <label>Department Address</label>
-        <input type="text" id="editAddress" name="department_address" required>
-
-        <div class="btn-row">
-          <button type="submit">Save Changes</button>
-          <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
-        </div>
-      </form>
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Department Name</th>
+                                <th>Program Type</th>
+                                <th>Department Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (department && department.length > 0) { %>
+                                <% department.forEach(d => { %>
+                                    <tr>
+                                        <td><%= d.department_name %></td>
+                                        <td><%= d.program_type %></td>
+                                        <td><%= d.department_address %></td>
+                                        <td>
+                                            <button type="button" class="edit-btn" data-id="<%= d._id %>" data-name="<%= d.department_name %>" data-type="<%= d.program_type %>" data-address="<%= d.department_address %>">Edit</button>
+                                            <button type="button" class="delete-btn" data-id="<%= d._id %>" data-name="<%= d.department_name %>">Delete</button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" style="text-align:center; padding:2rem; color:#94a3b8;">No departments found.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
 
-  <div class="popup-overlay" id="deletePopup">
-    <div class="popup">
-      <h2>Confirm Deletion</h2>
-      <p id="deleteMessage" style="text-align:center;"></p>
-      <div class="btn-row">
-        <button class="delete-confirm" id="confirmDelete">Delete Department</button>
-        <button class="cancel-btn" id="cancelDelete">Cancel</button>
-      </div>
+    <div class="popup-overlay" id="editPopup">
+        <div class="popup">
+            <h2>Edit Department</h2>
+            <form id="editForm" method="post" action="/admin/department/update">
+                <input type="hidden" id="editId" name="id">
+                <label for="editName">Department Name</label>
+                <input type="text" id="editName" name="department_name" required>
+
+                <label for="editType">Program Type</label>
+                <select id="editType" name="program_type" required>
+                    <option value="UG">Undergraduate (UG)</option>
+                    <option value="PG">Postgraduate (PG)</option>
+                    <option value="Research">Research</option>
+                </select>
+
+                <label for="editAddress">Department Address</label>
+                <input type="text" id="editAddress" name="department_address" required>
+
+                <div class="btn-row">
+                    <button type="submit">Save Changes</button>
+                    <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const editBtns = document.querySelectorAll('.edit-btn')
-    const deleteBtns = document.querySelectorAll('.delete-btn')
-    const popupEdit = document.getElementById('editPopup')
-    const popupDelete = document.getElementById('deletePopup')
-    const cancelEdit = document.getElementById('cancelEdit')
-    const cancelDelete = document.getElementById('cancelDelete')
-    const confirmDelete = document.getElementById('confirmDelete')
-    let deleteId = ""
+    <div class="popup-overlay" id="deletePopup">
+        <div class="popup">
+            <h2>Confirm Deletion</h2>
+            <p id="deleteMessage" style="text-align:center; color:#cbd5e1; margin-bottom:1.5rem;"></p>
+            <div class="btn-row">
+                <button class="delete-confirm" id="confirmDelete" type="button">Delete Department</button>
+                <button class="cancel-btn" id="cancelDelete" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-    editBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('editId').value = btn.dataset.id
-        document.getElementById('editName').value = btn.dataset.name
-        document.getElementById('editType').value = btn.dataset.type
-        document.getElementById('editAddress').value = btn.dataset.address
-        popupEdit.style.display = 'flex'
-      })
-    })
+    <script>
+        window.addEventListener('load', function () {
+            if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+        });
 
-    cancelEdit.addEventListener('click', () => popupEdit.style.display = 'none')
+        const editBtns = document.querySelectorAll('.edit-btn');
+        const popupEdit = document.getElementById('editPopup');
+        const cancelEdit = document.getElementById('cancelEdit');
 
-    deleteBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        deleteId = btn.dataset.id
-        document.getElementById('deleteMessage').innerText =
-        `Are you sure you want to delete "${btn.dataset.name}"?`
-        popupDelete.style.display = 'flex'
-      })
-    })
+        editBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.getElementById('editId').value = this.dataset.id;
+                document.getElementById('editName').value = this.dataset.name;
+                document.getElementById('editType').value = this.dataset.type;
+                document.getElementById('editAddress').value = this.dataset.address;
+                popupEdit.style.display = 'flex';
+            });
+        });
 
-    cancelDelete.addEventListener('click', () => popupDelete.style.display = 'none')
+        cancelEdit.addEventListener('click', () => { popupEdit.style.display = 'none'; });
 
-    confirmDelete.addEventListener('click', () => {
-      window.location.href = `/admin/department/delete?id=${deleteId}`
-    })
+        const deleteBtns = document.querySelectorAll('.delete-btn');
+        const popupDelete = document.getElementById('deletePopup');
+        const cancelDelete = document.getElementById('cancelDelete');
+        const confirmDelete = document.getElementById('confirmDelete');
+        let deleteId = "";
 
-    window.addEventListener('click', e => {
-      if (e.target === popupEdit) popupEdit.style.display = 'none'
-      if (e.target === popupDelete) popupDelete.style.display = 'none'
-    })
-  </script>
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                deleteId = this.dataset.id;
+                document.getElementById('deleteMessage').innerText = `Are you sure you want to delete "${this.dataset.name}"?`;
+                popupDelete.style.display = 'flex';
+            });
+        });
 
-  <script src="/js/active.js"></script>
+        cancelDelete.addEventListener('click', () => { popupDelete.style.display = 'none'; });
+        confirmDelete.addEventListener('click', () => {
+            if (deleteId) window.location.href = `/admin/department/delete?id=${deleteId}`;
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === popupEdit) popupEdit.style.display = 'none';
+            if (e.target === popupDelete) popupDelete.style.display = 'none';
+        });
+    </script>
+    <script src="/js/active.js"></script>
 </body>
 </html>

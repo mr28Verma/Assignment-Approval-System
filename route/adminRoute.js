@@ -9,13 +9,6 @@ const Department = require('../models/department')
 const { home, list, create, deletedept, searchDept, updateDept, createUser, userList, updateUser, deleteUser, getFilteredUsers, adminLogout } = require('../controllers/admin')
 
 
-connectDB();
-
-
-router.get('/login',(req,res)=>{
-  res.render('admin/login',{err: ''})
-})
-
 router.get('/home', auth.auth, home);
 
 router.post('/department/create',auth.auth, create);

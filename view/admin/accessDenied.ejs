@@ -4,9 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Denied</title>
-    <script type="module" src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/accessDenied.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f17;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .error-container {
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+            padding: 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .error-icon {
+            width: 48px;
+            height: 48px;
+            color: #ef4444;
+            margin-bottom: 1rem;
+        }
+        .error-code {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            color: #f8fafc;
+        }
+        .error-message {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #ef4444;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .error-description {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+        }
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #6366f1;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+        .action-button:hover {
+            background: #4f46e5;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,18 +89,20 @@
         
         <p class="error-description">
             You do not have the necessary permissions to view this resource. 
-            Please contact an administrator or return to the main dashboard.
+            Please contact an administrator or return to the main login page.
         </p>
 
         <a href="/" class="action-button">
-            <i data-lucide="home" class="w-5 h-5"></i>
+            <i data-lucide="home" style="width: 18px; height: 18px;"></i>
             Go to Login
         </a>
     </div>
+
     <script src="/js/active.js"></script>
     <script>
-        
-        lucide.createIcons();
+        if (window.lucide) {
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>

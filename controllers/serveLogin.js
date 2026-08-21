@@ -13,13 +13,17 @@ async function adminLogin(req, res) {
 
     try {
         if (username !== process.env.ADMIN_USERNAME) {
-            return res.render("admin/login", { err: "Username invalid!" });
+            return res.render("login_portal", {
+                err: "Username invalid!"
+            });
         }
 
         const match = await bcrypt.compare(password, process.env.ADMIN_PASSWORD);
 
         if (!match) {
-            return res.render("admin/login", { err: "Password invalid!" });
+            return res.render("login_portal", {
+                err: "Password invalid!"
+            });
         }
 
         const token = jwt.sign(
@@ -46,7 +50,11 @@ async function adminLogin(req, res) {
         res.redirect('/admin/home');
 
     } catch (err) {
-        res.render("admin/login", { err: "Server Error!" });
+        console.error(err);
+
+        res.render("login_portal", {
+            err: "Server Error!"
+        });
     }
 }
 

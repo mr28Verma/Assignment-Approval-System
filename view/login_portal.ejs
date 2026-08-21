@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in · Assignment Tracker</title>
+    <title>Sign in · University Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Warm editorial paper palette */
             --bg: #F5F3EE;
             --paper: #FFFFFF;
             --ink: #1D2130;
@@ -18,19 +17,17 @@
             --ink-faint: #9296A3;
             --line: #E4E0D5;
 
-            --student: #3D4CE0;
-            --student-tint: #ECEEFC;
-            --student-glow: rgba(61, 76, 224, 0.12);
+            --user: #3D4CE0;
+            --user-tint: #ECEEFC;
 
             --admin: #2E6B4E;
             --admin-tint: #E7F3EC;
-            --admin-glow: rgba(46, 107, 78, 0.12);
 
             --radius: 16px;
+            --radius-sm: 8px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { -webkit-font-smoothing: antialiased; }
 
         body {
@@ -44,7 +41,6 @@
             overflow-x: hidden;
         }
 
-        /* Ambient floating shapes */
         .ambient-shape {
             position: fixed;
             border-radius: 50%;
@@ -52,6 +48,7 @@
             pointer-events: none;
             z-index: 0;
             opacity: 0.6;
+            transition: background 0.4s ease;
         }
 
         .shape-1 {
@@ -59,7 +56,7 @@
             left: -5%;
             width: 40vw;
             height: 40vw;
-            background: radial-gradient(circle, var(--student-tint), transparent 70%);
+            background: radial-gradient(circle, var(--user-tint), transparent 70%);
         }
 
         .shape-2 {
@@ -67,10 +64,11 @@
             right: -5%;
             width: 45vw;
             height: 45vw;
-            background: radial-gradient(circle, var(--admin-tint), transparent 70%);
+            background: radial-gradient(circle, #EFECE6, transparent 70%);
         }
 
-        /* Dynamic Grid Background */
+        body[data-role="admin"] .shape-1 { background: radial-gradient(circle, var(--admin-tint), transparent 70%); }
+
         body::before {
             content: "";
             position: fixed;
@@ -90,262 +88,334 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 4rem 1.5rem 3rem;
+            padding: 3rem 1.5rem;
         }
 
         .intro {
             text-align: center;
             max-width: 480px;
-            margin-bottom: 3rem;
-            animation: fadeInDown 0.7s ease-out;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.6s ease-out;
         }
 
         .eyebrow {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 500;
-            letter-spacing: 0.09em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--ink-faint);
-            margin-bottom: 0.9rem;
+            margin-bottom: 0.8rem;
         }
 
         .intro h1 {
             font-family: 'Fraunces', serif;
             font-weight: 600;
-            font-size: 2.4rem;
-            letter-spacing: -0.025em;
+            font-size: 2.25rem;
+            letter-spacing: -0.02em;
             line-height: 1.15;
-            margin-bottom: 0.85rem;
+            margin-bottom: 0.5rem;
         }
 
         .intro p {
             color: var(--ink-soft);
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
-        .cards {
-            display: grid;
-            gap: 1.5rem;
+        .auth-card {
             width: 100%;
-            max-width: 660px;
-            grid-template-columns: 1fr;
-        }
-
-        @media (min-width: 640px) {
-            .cards { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* Interactive Elevation Cards */
-        .card {
-            position: relative;
+            max-width: 440px;
             background: var(--paper);
             border: 1px solid var(--line);
             border-radius: var(--radius);
-            padding: 2rem 1.75rem 1.75rem;
-            text-decoration: none;
-            color: var(--ink);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 12px rgba(20, 20, 30, 0.03);
-            overflow: hidden;
+            padding: 2.25rem 2rem;
+            box-shadow: 0 12px 32px rgba(20, 20, 30, 0.03);
+            position: relative;
         }
 
-        /* Folder-tab signature accent */
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 1.75rem;
-            width: 2.75rem;
-            height: 4px;
-            border-radius: 0 0 4px 4px;
-            transition: width 0.25s ease;
-        }
-
-        .card.student::before { background: var(--student); }
-        .card.admin::before { background: var(--admin); }
-
-        .card:hover::before {
-            width: 4rem;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-        }
-
-        .card.student:hover { 
-            border-color: rgba(61, 76, 224, 0.35); 
-            box-shadow: 0 16px 32px -12px var(--student-glow);
-        }
-        
-        .card.admin:hover { 
-            border-color: rgba(46, 107, 78, 0.35); 
-            box-shadow: 0 16px 32px -12px var(--admin-glow);
-        }
-
-        /* Header Row inside card */
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-        }
-
-        .card-tag {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
-        }
-
-        .card.student .card-tag { color: var(--student); background: var(--student-tint); }
-        .card.admin .card-tag { color: var(--admin); background: var(--admin-tint); }
-
-        /* Custom Mini SVG Icons */
-        .role-icon {
-            width: 36px;
-            height: 36px;
+        .role-switch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #EFECE6;
+            padding: 4px;
             border-radius: 10px;
+            margin-bottom: 1.75rem;
+            gap: 2px;
+        }
+
+        .role-btn {
+            background: transparent;
+            border: none;
+            color: var(--ink-soft);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.65rem 0.5rem;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.25s ease;
+            gap: 0.5rem;
         }
 
-        .card.student .role-icon { background: var(--student-tint); color: var(--student); }
-        .card.admin .role-icon { background: var(--admin-tint); color: var(--admin); }
-
-        .card:hover .role-icon {
-            transform: scale(1.1) rotate(-4deg);
+        .role-btn.active.users {
+            background: var(--paper);
+            color: var(--user);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        .card-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.3rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            margin-bottom: 0.45rem;
+        .role-btn.active.admin {
+            background: var(--paper);
+            color: var(--admin);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        .card-desc {
-            font-size: 0.885rem;
-            color: var(--ink-soft);
-            line-height: 1.55;
-            margin-bottom: 1.75rem;
+        .message-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            margin-bottom: 1.25rem;
+            text-align: center;
+            font-weight: 500;
         }
 
-        .card-cta {
-            margin-top: auto;
-            display: inline-flex;
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.4rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .forgot-link {
+            color: var(--ink-soft);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.8125rem;
+        }
+
+        .forgot-link:hover { color: var(--ink); }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.875rem;
+            color: var(--ink-faint);
+            pointer-events: none;
+            display: flex;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 46px;
+            background: #EFECE6;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            padding: 0 1rem 0 2.6rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: var(--ink-faint);
+        }
+
+        .form-input:focus {
+            background: var(--paper);
+            border-color: var(--line);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 46px;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
             font-size: 0.875rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            margin-top: 0.5rem;
         }
 
-        .card.student .card-cta { color: var(--student); }
-        .card.admin .card-cta { color: var(--admin); }
+        .btn-submit:hover { opacity: 0.92; }
 
-        .card-cta svg {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.2s ease;
-        }
-
-        .card:hover .card-cta svg { transform: translateX(5px); }
+        body[data-role="users"] .btn-submit { background: var(--user); }
+        body[data-role="admin"] .btn-submit { background: var(--admin); }
 
         footer {
             position: relative;
             z-index: 1;
             text-align: center;
             padding: 0 1.5rem 2.5rem;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             color: var(--ink-faint);
         }
 
         footer a {
             color: var(--ink-soft);
-            font-weight: 500;
-            text-decoration: none;
-            border-bottom: 1px solid var(--line);
-            transition: all 0.2s ease;
-        }
-
-        footer a:hover { 
-            color: var(--ink); 
-            border-color: var(--ink-soft); 
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
         }
 
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-15px); }
+            from { opacity: 0; transform: translateY(-12px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .card, .card-cta svg, .role-icon { transition: none; animation: none; }
-        }
-
-        a:focus-visible, .card:focus-visible {
-            outline: 2px solid var(--ink);
-            outline-offset: 3px;
         }
     </style>
 </head>
 
-<body>
+<% 
+    const currentRole = (typeof role !== 'undefined' && role) ? role : 'users'; 
+    const isAdmin = currentRole === 'admin';
+%>
+
+<body data-role="<%= currentRole %>">
 
     <div class="ambient-shape shape-1"></div>
     <div class="ambient-shape shape-2"></div>
 
     <main>
         <div class="intro">
-            <div class="eyebrow">Sign in</div>
-            <h1>Pick up where you left off</h1>
-            <p>Select your assigned portal workspace to view coursework, track deadlines, and manage system reviews.</p>
+            <div class="eyebrow">Sign In</div>
+            <h1 id="portal-heading"><%= isAdmin ? 'Admin Portal' : 'User Portal' %></h1>
+            <p id="portal-subheading"><%= isAdmin ? 'System Administration & Portal Management' : 'Student, HOD, and Faculty Access' %></p>
         </div>
 
-        <div class="cards">
-            <a href="/user/login" class="card student">
-                <div class="card-header">
-                    <span class="card-tag">Student</span>
-                    <div class="role-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                    </div>
-                </div>
-                <h2 class="card-title">Student sign in</h2>
-                <p class="card-desc">Check upcoming assignment deadlines, turn in coursework, and view professor feedback.</p>
-                <span class="card-cta">
-                    Enter Portal
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </span>
-            </a>
+        <div class="auth-card">
+            <div class="role-switch">
+                <button type="button" class="role-btn <%= !isAdmin ? 'active users' : '' %>" id="btn-users" onclick="setRole('users')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    Users
+                </button>
+                <button type="button" class="role-btn <%= isAdmin ? 'active admin' : '' %>" id="btn-admin" onclick="setRole('admin')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    Admin
+                </button>
+            </div>
 
-            <a href="/admin/login" class="card admin">
-                <div class="card-header">
-                    <span class="card-tag">Admin</span>
-                    <div class="role-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            <% if (typeof err !== 'undefined' && err && err.trim().length > 0) { %>
+                <div class="message-box"><%= err %></div>
+            <% } %>
+
+            <form id="login-form" action="<%= isAdmin ? '/auth/login' : '/user/login' %>" method="POST">
+                <input type="hidden" name="role" id="role-input" value="<%= currentRole %>">
+
+                <div class="form-group">
+                    <label class="form-label" for="login-identifier" id="label-identifier"><%= isAdmin ? 'Username' : 'University Email' %></label>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <input type="<%= isAdmin ? 'text' : 'email' %>" 
+                               id="login-identifier" 
+                               name="<%= isAdmin ? 'username' : 'email' %>" 
+                               class="form-input" 
+                               placeholder="<%= isAdmin ? 'Enter username' : 'your.name@university.edu' %>" 
+                               required 
+                               autocomplete="username">
                     </div>
                 </div>
-                <h2 class="card-title">Admin sign in</h2>
-                <p class="card-desc">Oversee departmental submissions, review pending work, and monitor overall course progress.</p>
-                <span class="card-cta">
-                    Open Console
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </span>
-            </a>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <label for="password">Password</label>
+                        <a href="/user/forget" class="forgot-link" id="forgot-link" style="display: <%= isAdmin ? 'none' : 'inline' %>;">Forgot Password?</a>
+                    </div>
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btn-submit"><%= isAdmin ? 'Log In as Admin' : 'Login' %></button>
+            </form>
         </div>
     </main>
 
     <footer>
-        Need technical assistance? <a href="#">Contact your help desk</a>
+        Forgot your password? <a href="#" id="support-link">Contact support</a>
     </footer>
+
+    <script>
+        function setRole(role, clearInputs = true) {
+            const body = document.body;
+            const form = document.getElementById('login-form');
+            const roleInput = document.getElementById('role-input');
+            const btnUsers = document.getElementById('btn-users');
+            const btnAdmin = document.getElementById('btn-admin');
+            
+            const heading = document.getElementById('portal-heading');
+            const subheading = document.getElementById('portal-subheading');
+            const submitBtn = document.getElementById('btn-submit');
+            const identifierInput = document.getElementById('login-identifier');
+            const passwordInput = document.getElementById('password');
+            const identifierLabel = document.getElementById('label-identifier');
+            const forgotLink = document.getElementById('forgot-link');
+
+            if (clearInputs) {
+                identifierInput.value = '';
+                if (passwordInput) passwordInput.value = '';
+            }
+
+            body.setAttribute('data-role', role);
+            roleInput.value = role;
+
+            btnUsers.className = 'role-btn';
+            btnAdmin.className = 'role-btn';
+
+            if (role === 'admin') {
+                btnAdmin.className = 'role-btn active admin';
+                heading.textContent = 'Admin Portal';
+                subheading.textContent = 'System Administration & Portal Management';
+                submitBtn.textContent = 'Log In as Admin';
+                
+                form.action = '/auth/login';
+                identifierLabel.textContent = 'Username';
+                identifierInput.name = 'username';
+                identifierInput.type = 'text';
+                identifierInput.placeholder = 'Enter username';
+                forgotLink.style.display = 'none';
+            } else {
+                btnUsers.className = 'role-btn active users';
+                heading.textContent = 'User Portal';
+                subheading.textContent = 'Student, HOD, and Faculty Access';
+                submitBtn.textContent = 'Login';
+                
+                form.action = '/user/login';
+                identifierLabel.textContent = 'University Email';
+                identifierInput.name = 'email';
+                identifierInput.type = 'email';
+                identifierInput.placeholder = 'your.name@university.edu';
+                forgotLink.style.display = 'inline';
+            }
+        }
+    </script>
 
 </body>
 </html>

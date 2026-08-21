@@ -5,187 +5,606 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Portal Dashboard</title>
 
-  <script type="module" src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="/css/adminDashboard.css">
-  <link rel="stylesheet" href="/css/sidebar.css">
+  <style>
+    :root {
+      --bg-base: #0b0f17;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1e293b;
+      --border-color: rgba(255, 255, 255, 0.08);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --accent-sky: #38bdf8;
+      --accent-emerald: #34d399;
+      --accent-orange: #fb923c;
+      --accent-fuchsia: #e879f9;
+      --accent-primary: #6366f1;
+      --accent-primary-hover: #4f46e5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app-container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      #app-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+      }
+      body {
+        overflow: auto;
+      }
+    }
+
+    #main-content {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      #main-content {
+        height: auto;
+        overflow-y: visible;
+      }
+    }
+
+    /* STATS CARDS GRID */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 0px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-top: 0.5rem;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .departments .card-icon { color: var(--accent-sky); background: rgba(56, 189, 248, 0.1); }
+    .students .card-icon { color: var(--accent-emerald); background: rgba(52, 211, 153, 0.1); }
+    .professors .card-icon { color: var(--accent-orange); background: rgba(251, 146, 60, 0.1); }
+    .hods .card-icon { color: var(--accent-fuchsia); background: rgba(232, 121, 249, 0.1); }
+
+    /* RESOURCE DISTRIBUTION SECTION */
+    .activity-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 0px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .activity-header h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+
+    .btn-activity-toggle {
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 1rem;
+      border-radius: 0px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-activity-toggle:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .chart-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .chart-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1.5rem;
+      border-radius: 0px;
+      border: 1px solid var(--border-color);
+    }
+
+    #chart-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+    .chart-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .chart-center-number {
+      font-size: 1.75rem;
+      font-weight: 800;
+    }
+
+    .chart-center-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .chart-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 0px;
+    }
+
+    .legend-label {
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .legend-value {
+      font-weight: 700;
+    }
+
+    /* ACTIONS & KPIS */
+    .chart-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .panel-block h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 0px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: white;
+      grid-column: span 2;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* RIGHT DRAWER (ACTIVITY LOG) */
+    .activity-sidebar {
+      position: fixed;
+      top: 0;
+      right: -360px;
+      width: 360px;
+      height: 100vh;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .activity-sidebar.open {
+      right: 0;
+    }
+
+    .activity-sidebar-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .activity-sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .activity-log-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .activity-log-list li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.875rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .activity-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .activity-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .activity-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+      z-index: 90;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .activity-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
 </head>
 
 <body>
 
-<%- include('../partials/sidebar') %>
+<div id="app-container">
 
-<!-- Activity Sidebar (Right) -->
-<div id="activity-sidebar" class="activity-sidebar">
-  <div class="activity-sidebar-header">
-    <h3>Recent Activity</h3>
-    <button class="close-activity-btn" onclick="toggleActivitySidebar()">
-      <i data-lucide="x"></i>
-    </button>
-  </div>
+  <!-- INCLUDED SIDEBAR PARTIAL -->
+  <%- include('../partials/sidebar') %>
 
-  <div class="activity-sidebar-content">
-    <ul id="activity-log-list">
-      <% if (recentActivities && recentActivities.length > 0) { %>
-        <% recentActivities.forEach(activity => { %>
-          <li>
-            <i data-lucide="<%= activity.icon %>" style="color:<%= activity.color %>;"></i>
-            <div class="activity-details">
-              <span class="activity-text"><%= activity.description %></span>
-              <span class="activity-time"><%= activity.timeAgo %></span>
+  <!-- MAIN SCROLLABLE DASHBOARD PANEL -->
+  <div id="main-content">
+
+    <!-- STATS CARDS -->
+    <div class="card-grid">
+      <div class="card departments">
+        <div class="card-header">
+          <span class="card-title">Departments</span>
+          <div class="card-icon"><i data-lucide="building-2"></i></div>
+        </div>
+        <div class="card-value"><%= dept %></div>
+      </div>
+
+      <div class="card students">
+        <div class="card-header">
+          <span class="card-title">Students</span>
+          <div class="card-icon"><i data-lucide="user-check"></i></div>
+        </div>
+        <div class="card-value"><%= student %></div>
+      </div>
+
+      <div class="card professors">
+        <div class="card-header">
+          <span class="card-title">Professors</span>
+          <div class="card-icon"><i data-lucide="graduation-cap"></i></div>
+        </div>
+        <div class="card-value"><%= professor %></div>
+      </div>
+
+      <div class="card hods">
+        <div class="card-header">
+          <span class="card-title">HODs</span>
+          <div class="card-icon"><i data-lucide="briefcase"></i></div>
+        </div>
+        <div class="card-value"><%= hod %></div>
+      </div>
+    </div>
+
+    <!-- MAIN RESOURCE & METRICS PANEL -->
+    <div class="activity-section">
+      <div class="activity-header">
+        <h3>Portal Resource Distribution</h3>
+        <button class="btn-activity-toggle" onclick="toggleActivitySidebar()">
+          <i data-lucide="activity"></i>
+          <span>View Activity Log</span>
+        </button>
+      </div>
+
+      <div class="chart-container">
+        <!-- LEFT: DONUT CHART -->
+        <div class="chart-left">
+          <div id="chart-wrapper">
+            <canvas id="activityPieChart"></canvas>
+            <div class="chart-center-text">
+              <div class="chart-center-number"><%= dept + student + professor + hod %></div>
+              <div class="chart-center-label">Total</div>
             </div>
-          </li>
-        <% }) %>
-      <% } else { %>
-        <li class="no-activity">
-          <i data-lucide="inbox" style="color: var(--text-gray);"></i>
-          <span>No recent administrative activity found.</span>
-        </li>
-      <% } %>
-    </ul>
+          </div>
+
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--accent-sky)"></div>
+              <span class="legend-label">Departments</span>
+              <span class="legend-value"><%= dept %></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--accent-emerald)"></div>
+              <span class="legend-label">Students</span>
+              <span class="legend-value"><%= student %></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--accent-orange)"></div>
+              <span class="legend-label">Professors</span>
+              <span class="legend-value"><%= professor %></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--accent-fuchsia)"></div>
+              <span class="legend-label">HODs</span>
+              <span class="legend-value"><%= hod %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: KPIS & ACTIONS -->
+        <div class="chart-right">
+          <div class="panel-block">
+            <h4>Key Metrics</h4>
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <span class="kpi-value"><%= dept + student + professor + hod %></span>
+                <span class="kpi-label">Total Entities</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-value">
+                  <%= professor > 0 ? (student / professor).toFixed(0) : 'N/A' %>:1
+                </span>
+                <span class="kpi-label">Student Ratio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-block">
+            <h4>Quick Actions</h4>
+            <div class="action-buttons">
+              <a href="/admin/user-form" class="btn btn-primary">
+                <i data-lucide="user-plus"></i> 
+                <span>Add New User</span>
+              </a>
+              <a href="/department/form" class="btn btn-secondary">
+                <i data-lucide="building-2"></i> 
+                <span>Create Dept</span>
+              </a>
+              <a href="/admin/users" class="btn btn-secondary">
+                <i data-lucide="users"></i>
+                <span>Manage Users</span>
+              </a>
+              <a href="/admin/department/list" class="btn btn-secondary" style="grid-column: span 2;">
+                <i data-lucide="list"></i>
+                <span>Manage Departments</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
 
-<!-- Overlay for sidebar -->
-<div id="activity-overlay" class="activity-overlay" onclick="toggleActivitySidebar()"></div>
-
-<!-- MAIN CONTENT -->
-<div id="main-content">
-
-  <!-- STATS CARDS -->
-  <div class="card-grid">
-    <div class="card departments">
-      <div class="card-border"></div>
-      <div class="card-title">Departments</div>
-      <div class="card-value"><%= dept %></div>
-      <i data-lucide="building-2" style="color: var(--border-sky)"></i>
-    </div>
-
-    <div class="card students">
-      <div class="card-border"></div>
-      <div class="card-title">Students</div>
-      <div class="card-value"><%= student %></div>
-      <i data-lucide="user-check" style="color: var(--border-emerald)"></i>
-    </div>
-
-    <div class="card professors">
-      <div class="card-border"></div>
-      <div class="card-title">Professors</div>
-      <div class="card-value"><%= professor %></div>
-      <i data-lucide="graduation-cap" style="color: var(--border-orange)"></i>
-    </div>
-
-    <div class="card hods">
-      <div class="card-border"></div>
-      <div class="card-title">HODs</div>
-      <div class="card-value"><%= hod %></div>
-      <i data-lucide="briefcase" style="color: var(--border-fuchsia)"></i>
-    </div>
-  </div>
-
-  <!-- ACTIVITY SECTION -->
-  <div class="activity-section">
-    <div class="activity-header">
-      <h3>Portal Resource Distribution</h3>
-      <button class="view-activity-btn" onclick="toggleActivitySidebar()">
-        <i data-lucide="activity"></i>
-        <span>View Recent Activity</span>
+  <!-- RIGHT SLIDE-OVER ACTIVITY LOG -->
+  <div id="activity-sidebar" class="activity-sidebar">
+    <div class="activity-sidebar-header">
+      <h3>Recent Activity</h3>
+      <button class="close-btn" onclick="toggleActivitySidebar()">
+        <i data-lucide="x"></i>
       </button>
     </div>
 
-    <div class="chart-container">
-      <!-- LEFT: CHART + LEGEND -->
-      <div class="chart-left">
-        <div id="chart-wrapper">
-          <canvas id="activityPieChart"></canvas>
-          <div class="chart-center-text">
-            <div class="chart-center-number"><%= dept + student + professor + hod %></div>
-            <div class="chart-center-label">Total</div>
-          </div>
-        </div>
-
-        <div class="chart-legend">
-          <div class="legend-item">
-            <div class="legend-color" style="background: var(--border-sky)"></div>
-            <span class="legend-label">Departments</span>
-            <span class="legend-value"><%= dept %></span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background: var(--border-emerald)"></div>
-            <span class="legend-label">Students</span>
-            <span class="legend-value"><%= student %></span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background: var(--border-orange)"></div>
-            <span class="legend-label">Professors</span>
-            <span class="legend-value"><%= professor %></span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background: var(--border-fuchsia)"></div>
-            <span class="legend-label">HODs</span>
-            <span class="legend-value"><%= hod %></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: KPIs + ACTIONS -->
-      <div class="chart-right">
-        <!-- KPIs -->
-        <div class="kpi-section">
-          <h4>Key Metrics</h4>
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <span class="kpi-value"><%= dept + student + professor + hod %></span>
-              <span class="kpi-label">Total Entities</span>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-value">
-                <%= professor > 0 ? (student / professor).toFixed(0) : 'N/A' %>:1
-              </span>
-              <span class="kpi-label">Student:Faculty</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="actions-section">
-          <h4>Quick Actions</h4>
-          <div class="action-buttons">
-            <a href="/admin/user-form" class="btn-primary">
-              <i data-lucide="user-plus"></i> 
-              <span>Add New User</span>
-            </a>
-            <a href="/department/form" class="btn-secondary">
-              <i data-lucide="building-2"></i> 
-              <span>Create Department</span>
-            </a>
-            <a href="/admin/users" class="btn-tertiary">
-              <i data-lucide="users"></i>
-              <span>Manage All Users</span>
-            </a>
-            <a href="/admin/department/list" class="btn-tertiary">
-              <i data-lucide="list"></i>
-              <span>Manage Departments</span>
-            </a>
-          </div>
-        </div>
-      </div>
+    <div class="activity-sidebar-content">
+      <ul class="activity-log-list">
+        <% if (recentActivities && recentActivities.length > 0) { %>
+          <% recentActivities.forEach(activity => { %>
+            <li>
+              <i data-lucide="<%= activity.icon %>" style="color:<%= activity.color %>;"></i>
+              <div class="activity-details">
+                <span class="activity-text"><%= activity.description %></span>
+                <span class="activity-time"><%= activity.timeAgo %></span>
+              </div>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="no-activity">
+            <i data-lucide="inbox" style="color: var(--text-muted);"></i>
+            <span>No recent administrative activity found.</span>
+          </li>
+        <% } %>
+      </ul>
     </div>
   </div>
+
+  <div id="activity-overlay" class="activity-overlay" onclick="toggleActivitySidebar()"></div>
 
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  lucide.createIcons();
+  if (window.lucide) {
+    lucide.createIcons();
+  }
 
   const pieCtx = document.getElementById('activityPieChart');
   const values = [<%= dept %>, <%= student %>, <%= professor %>, <%= hod %>];
   const labels = ["Departments", "Students", "Professors", "HODs"];
-  const colors = ['#0EA5E9', '#10B981', '#F97316', '#D946EF'];
+  const colors = ['#38bdf8', '#34d399', '#fb923c', '#e879f9'];
 
   new Chart(pieCtx, {
     type: "doughnut",
@@ -194,23 +613,23 @@ document.addEventListener("DOMContentLoaded", () => {
       datasets: [{
         data: values,
         backgroundColor: colors,
-        borderColor: '#1a1a2e',
+        borderColor: '#111827',
         borderWidth: 3,
-        hoverOffset: 10
+        hoverOffset: 6
       }]
     },
     options: {
-      cutout: "70%",
+      cutout: "75%",
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.95)',
-          titleColor: '#E5E7EB',
-          bodyColor: '#9CA3AF',
-          borderColor: 'rgba(99, 102, 241, 0.3)',
+          backgroundColor: '#1e293b',
+          titleColor: '#f8fafc',
+          bodyColor: '#94a3b8',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
           borderWidth: 1,
-          padding: 12,
-          cornerRadius: 8
+          padding: 10,
+          cornerRadius: 0
         }
       },
       responsive: true,
@@ -225,15 +644,8 @@ function toggleActivitySidebar() {
   
   sidebar.classList.toggle('open');
   overlay.classList.toggle('open');
-  
-  // Reinitialize icons after sidebar opens
-  setTimeout(() => {
-    lucide.createIcons();
-  }, 100);
 }
 </script>
-
-<script src="/js/active.js"></script>
 
 </body>
 </html>

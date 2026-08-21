@@ -1,69 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Users</title>
 
-    <link rel="stylesheet" href="/css/sidebar.css">
-    <link rel="stylesheet" href="/css/userList.css">
-
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: #0b0f17;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        #app-container { display: flex; width: 100%; min-height: 100vh; }
+        #main-content { flex: 1; padding: 2rem; overflow-x: auto; }
+
+        .filter-form {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: #111827;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+        }
+
+        .form-field-flex-1 { flex: 1; min-width: 250px; }
+        .form-field-quarter { min-width: 180px; }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .input-style {
+            width: 100%;
+            height: 42px;
+            padding: 0 0.75rem;
+            border-radius: 0px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #1e293b;
+            color: #f8fafc;
+            outline: none;
+        }
+
+        .input-style:focus { border-color: #6366f1; }
+
+        .table-card {
+            width: 100%;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .data-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            background: #1e293b;
+            color: #f8fafc;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            color: #cbd5e1;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 0px;
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            margin-right: 0.4rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .edit-button { background: #6366f1; color: white; }
+        .edit-button:hover { background: #4f46e5; }
+        .delete-button { background: #ef4444; color: white; }
+        .delete-button:hover { background: #dc2626; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 500px;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+    </style>
 </head>
 
 <body>
-    <%- include('../partials/sidebar') %>
+    <div id="app-container">
+        <%- include('../partials/sidebar') %>
 
-    <div id="main-content">
-        <form action="/admin/user/search" method="GET" class="filter-form">
-            <input type="hidden" name="page" value="1">
-            <input type="hidden" name="limit" value="<%= locals.limit || 20 %>">
+        <main id="main-content">
+            <form action="/admin/user/search" method="GET" class="filter-form">
+                <input type="hidden" name="page" value="1">
+                <input type="hidden" name="limit" value="<%= locals.limit || 20 %>">
 
-            <div class="form-field-flex-1">
-                <label class="input-label">Search</label>
-                <input 
-                    type="text" 
-                    name="search"
-                    placeholder="Search by name or email" 
-                    class="input-style"
-                    value="<%= locals.query?.search || '' %>"
-                >
-            </div>
+                <div class="form-field-flex-1">
+                    <label class="input-label">Search</label>
+                    <input type="text" name="search" placeholder="Search by name or email" class="input-style" value="<%= locals.query?.search || '' %>">
+                </div>
 
-            <div class="form-field-quarter">
-                <label class="input-label">Role</label>
-                <select name="role" class="input-style">
-                    <option value="">All</option>
-                    <option value="Student" <%= locals.query?.role === 'Student' ? 'selected' : '' %>>Student</option>
-                    <option value="Professor" <%= locals.query?.role === 'Professor' ? 'selected' : '' %>>Professor</option>
-                    <option value="HOD" <%= locals.query?.role === 'HOD' ? 'selected' : '' %>>HOD</option>
-                </select>
-            </div>
+                <div class="form-field-quarter">
+                    <label class="input-label">Role</label>
+                    <select name="role" class="input-style">
+                        <option value="">All</option>
+                        <option value="Student" <%= locals.query?.role === 'Student' ? 'selected' : '' %>>Student</option>
+                        <option value="Professor" <%= locals.query?.role === 'Professor' ? 'selected' : '' %>>Professor</option>
+                        <option value="HOD" <%= locals.query?.role === 'HOD' ? 'selected' : '' %>>HOD</option>
+                    </select>
+                </div>
 
-            <div class="form-field-quarter">
-                <label class="input-label">Department</label>
-                <select name="department" class="input-style">
-                    <option value="">All</option>
-                    <option value="CS">Computer Science</option>
-                    <option value="EE">Electrical Engineering</option>
-                    <option value="ME">Mechanical Engineering</option>
-                    <option value="PH">Physics</option>
-                    <option value="CH">Chemistry</option>
-                    <option value="AR">Architecture</option>
-                    <option value="HI">History</option>
-                </select>
-            </div>
+                <div class="form-field-quarter">
+                    <label class="input-label">Department</label>
+                    <select name="department" class="input-style">
+                        <option value="">All</option>
+                        <option value="CS">Computer Science</option>
+                        <option value="EE">Electrical Engineering</option>
+                        <option value="ME">Mechanical Engineering</option>
+                        <option value="PH">Physics</option>
+                        <option value="CH">Chemistry</option>
+                        <option value="AR">Architecture</option>
+                        <option value="HI">History</option>
+                    </select>
+                </div>
 
-            <!-- APPLY BUTTON ONLY FOR MOBILE -->
-            <div class="mobile-submit-button">
-                <button type="submit" class="action-button edit-button">
-                    Apply
-                </button>
-            </div>
-        </form>
+                <button type="submit" class="action-button edit-button" style="height:42px; padding:0 1.5rem;">Apply</button>
+            </form>
 
-        <div class="table-card">
-            <div class="table-wrapper">
+            <div class="table-card">
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -74,119 +195,114 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <% if (user && user.length > 0) { %>
-                            <% user.forEach((u, index) => { %>
-
-                                <tr class="<%= index % 2 === 0 ? 'dark-row-even' : 'dark-row-odd' %> table-row-hover">
-
-                                    <td data-label="Name"><%= u.name %></td>
-                                    <td data-label="Email"><%= u.email %></td>
-                                    <td data-label="Role"><%= u.role %></td>
-                                    <td data-label="Department"><%= u.department %></td>
-
-                                    <td data-label="Action">
-                                        <button class="action-button edit-button" onclick='openEditModal(<%- JSON.stringify(u) %>)'>
-                                            Edit
-                                        </button>
-
-                                        <button class="action-button delete-button" onclick="openDeleteModal('<%= u._id %>')">
-                                            Delete
-                                        </button>
+                            <% user.forEach((u) => { %>
+                                <tr>
+                                    <td><%= u.name || '' %></td>
+                                    <td><%= u.email || '' %></td>
+                                    <td><%= u.role || '' %></td>
+                                    <td><%= u.department || '' %></td>
+                                    <td>
+                                        <button type="button" class="action-button edit-button" onclick='openEditModal(<%- JSON.stringify(u) %>)'>Edit</button>
+                                        <button type="button" class="action-button delete-button" onclick="openDeleteModal('<%= u._id %>')">Delete</button>
                                     </td>
-
                                 </tr>
-
                             <% }) %>
-
                         <% } else { %>
-                            <tr><td colspan="5" class="no-results">No users found.</td></tr>
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:2rem; color:#94a3b8;">No users found.</td>
+                            </tr>
                         <% } %>
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        <!-- Edit Modal -->
-        <div id="edit-user-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-button" onclick="closeEditModal()">&times;</span>
-                <h2>Edit User</h2>
-
-                <form id="edit-user-form" method="POST">
-                    <input type="hidden" id="edit-user-id" name="id">
-
-                    <div class="form-field">
-                        <label class="input-label">Full Name</label>
-                        <input type="text" id="edit-name" name="name" class="input-style" required>
-                    </div>
-
-                    <div class="form-field">
-                        <label class="input-label">Email</label>
-                        <input type="email" id="edit-email" name="email" class="input-style" required>
-                    </div>
-
-                    <div class="form-field">
-                        <label class="input-label">Phone</label>
-                        <input type="tel" id="edit-phone" name="phone" class="input-style">
-                    </div>
-
-                    <div class="form-field">
-                        <label class="input-label">Department</label>
-                        <select id="edit-department" name="department" class="input-style">
-                            <option value="CS">Computer Science</option>
-                            <option value="EE">Electrical Engineering</option>
-                            <option value="ME">Mechanical Engineering</option>
-                            <option value="PH">Physics</option>
-                            <option value="CH">Chemistry</option>
-                            <option value="AR">Architecture</option>
-                            <option value="HI">History</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field">
-                        <label class="input-label">Role</label>
-                        <input type="text" id="edit-role" readonly class="input-style" style="background:#1e293b;">
-                    </div>
-
-                    <div class="modal-actions">
-                        <button type="submit" class="action-button edit-button">Save</button>
-                        <button type="button" class="action-button delete-button" onclick="closeEditModal()">Cancel</button>
-                    </div>
-                </form>
+            <!-- EDIT MODAL -->
+            <div id="edit-user-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeEditModal()">&times;</span>
+                    <h2 style="margin-bottom:1.25rem;">Edit User</h2>
+                    <form id="edit-user-form" method="POST">
+                        <input type="hidden" id="edit-user-id" name="id">
+                        <div style="margin-bottom:1rem;">
+                            <label class="input-label">Full Name</label>
+                            <input type="text" id="edit-name" name="name" class="input-style" required>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label class="input-label">Email</label>
+                            <input type="email" id="edit-email" name="email" class="input-style" required>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label class="input-label">Phone</label>
+                            <input type="tel" id="edit-phone" name="phone" class="input-style">
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label class="input-label">Department</label>
+                            <select id="edit-department" name="department" class="input-style">
+                                <option value="CS">Computer Science</option>
+                                <option value="EE">Electrical Engineering</option>
+                                <option value="ME">Mechanical Engineering</option>
+                                <option value="PH">Physics</option>
+                                <option value="CH">Chemistry</option>
+                                <option value="AR">Architecture</option>
+                                <option value="HI">History</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label class="input-label">Role</label>
+                            <input type="text" id="edit-role" readonly class="input-style" style="opacity: 0.7;">
+                        </div>
+                        <div class="modal-actions">
+                            <button type="submit" class="action-button edit-button">Save</button>
+                            <button type="button" class="action-button delete-button" onclick="closeEditModal()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
 
-        <!-- Delete Modal -->
-        <div id="delete-user-modal" class="modal">
-            <div class="modal-content small-modal">
-                <span class="close-button" onclick="closeDeleteModal()">&times;</span>
-                <h2>Delete User?</h2>
-
-                <p style="margin-bottom: 1.5rem; color: var(--text-gray);">
-                    This action cannot be undone.
-                </p>
-
-                <form id="delete-user-form" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-
-                    <div class="modal-actions">
-                        <button type="button" class="action-button edit-button" onclick="closeDeleteModal()">Cancel</button>
-                        <button type="submit" class="action-button delete-button">Delete</button>
-                    </div>
-                </form>
+            <!-- DELETE MODAL -->
+            <div id="delete-user-modal" class="modal">
+                <div class="modal-content" style="max-width: 400px;">
+                    <span class="close-button" onclick="closeDeleteModal()">&times;</span>
+                    <h2>Delete User?</h2>
+                    <p style="margin-top:0.5rem; margin-bottom:1.5rem; color:#94a3b8; font-size:0.9rem;">This action cannot be undone.</p>
+                    <form id="delete-user-form" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <div class="modal-actions">
+                            <button type="button" class="action-button edit-button" onclick="closeDeleteModal()">Cancel</button>
+                            <button type="submit" class="action-button delete-button">Delete</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-
+        </main>
     </div>
 
     <script src="/js/active.js"></script>
     <script>
-        window.onload = () => {
-            if (typeof lucide !== "undefined") lucide.createIcons();
-        };
-    </script>
+        function openEditModal(user) {
+            document.getElementById('edit-user-id').value = user._id || '';
+            document.getElementById('edit-name').value = user.name || '';
+            document.getElementById('edit-email').value = user.email || '';
+            document.getElementById('edit-phone').value = user.phone || '';
+            document.getElementById('edit-department').value = user.department || '';
+            document.getElementById('edit-role').value = user.role || '';
+            document.getElementById('edit-user-form').action = '/admin/users/' + user._id + '/edit';
+            document.getElementById('edit-user-modal').style.display = 'flex';
+        }
 
+        function closeEditModal() { document.getElementById('edit-user-modal').style.display = 'none'; }
+        function openDeleteModal(id) {
+            document.getElementById('delete-user-form').action = '/admin/users/' + id;
+            document.getElementById('delete-user-modal').style.display = 'flex';
+        }
+        function closeDeleteModal() { document.getElementById('delete-user-modal').style.display = 'none'; }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('edit-user-modal')) closeEditModal();
+            if (e.target === document.getElementById('delete-user-modal')) closeDeleteModal();
+        });
+    </script>
 </body>
 </html>

@@ -15,14 +15,13 @@ const { upload2 } = require('../config/multer');
 
 const fs = require('fs');
 
-const { userLogin, moveToDashboard } = require('../controllers/user');
+const {  moveToDashboard } = require('../controllers/user');
 
 const hashPass = require('../hashPassword');
 
 
 // ================= LOGIN =================
 
-router.get('/login', userLogin);
 
 router.post('/login', moveToDashboard);
 

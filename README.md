@@ -13,7 +13,14 @@ https://university-assignment-approval-system-pdoh.onrender.com/
 
 [Open Live Application](https://university-assignment-approval-system-pdoh.onrender.com/)
 
-The application uses a centralized authentication system and redirects authenticated users to the dashboard according to their assigned role.
+The application uses a **single login portal**. After authentication, users are automatically redirected to the dashboard according to their assigned role.
+
+Supported roles:
+
+- Student
+- Professor
+- HOD
+- Admin
 
 ---
 
@@ -31,12 +38,13 @@ The system supports the complete assignment approval workflow:
 - HODs perform the final review.
 - HOD approval or rejection represents the final decision.
 - Assignment history is maintained using a dedicated tracker.
+- Role-based access controls dashboard and system functionality.
 
 ---
 
-## Roles and Responsibilities
+# Roles and Responsibilities
 
-### Student
+## Student
 
 - Student authentication
 - Submit assignments
@@ -49,7 +57,9 @@ The system supports the complete assignment approval workflow:
 - Change password
 - Reset forgotten password using OTP verification
 
-### Professor
+---
+
+## Professor
 
 - Professor authentication
 - Professor dashboard
@@ -63,7 +73,9 @@ The system supports the complete assignment approval workflow:
 - Track assignment status
 - View assignment history
 
-### HOD
+---
+
+## HOD
 
 - HOD authentication
 - HOD dashboard
@@ -79,14 +91,50 @@ The system supports the complete assignment approval workflow:
 - Monitor department faculty
 - Track assignment status
 
-### Administrator
+---
 
-- Administrative authentication
+## Administrator
+
+- Admin authentication through the centralized login portal
 - Administrative dashboard
 - Manage system users
 - Monitor departments
 - Monitor assignment activity
 - View overall system information
+
+---
+
+# Authentication Flow
+
+The application uses a **single login portal** for all roles.
+
+```text
+                         Single Login Portal
+                                |
+                                v
+                         User Authentication
+                                |
+                                v
+                         Check User Role
+                                |
+              +-----------------+-----------------+
+              |                 |                 |
+              v                 v                 v
+           Student          Professor            HOD
+              |                 |                 |
+              v                 v                 v
+       Student Dashboard  Professor Dashboard  HOD Dashboard
+                               
+                                +
+                                |
+                                v
+                              Admin
+                                |
+                                v
+                        Admin Dashboard
+```
+
+The authenticated user's role determines which dashboard and protected features are available.
 
 ---
 
@@ -133,7 +181,7 @@ The system supports the complete assignment approval workflow:
 
 ---
 
-## Complete Status Flow
+# Complete Status Flow
 
 ```text
 draft
@@ -175,7 +223,7 @@ approved           rejected
 
 ---
 
-## Status Meaning
+# Status Meaning
 
 | Status | Description |
 |---|---|
@@ -465,24 +513,34 @@ Department
 
 ## Single Login Portal
 
-The system provides a centralized login portal for authentication.
+The application uses one centralized login portal instead of separate login pages for users and administrators.
 
 ```text
-                    Login Portal
-                         |
-                         v
-                  Authentication
-                         |
-              +----------+----------+
-              |          |           |
-              v          v           v
-           Student   Professor      HOD
-              |          |           |
-              v          v           v
-         Student UI  Professor UI  HOD UI
+                         Single Login Portal
+                                |
+                                v
+                         Authentication
+                                |
+                                v
+                          Role Detection
+                                |
+              +-----------------+-----------------+
+              |                 |                 |
+              v                 v                 v
+           Student          Professor            HOD
+              |                 |                 |
+              v                 v                 v
+       Student Dashboard  Professor Dashboard  HOD Dashboard
+
+                                |
+                                v
+                              Admin
+                                |
+                                v
+                        Admin Dashboard
 ```
 
-The authenticated user's role determines which dashboard and protected features are available.
+The system identifies the authenticated user's role and redirects the user to the appropriate dashboard.
 
 ---
 
@@ -491,18 +549,28 @@ The authenticated user's role determines which dashboard and protected features 
 Each role has access to its respective dashboard and functionality.
 
 ```text
-                         Login
-                           |
-                           v
-                    Authentication
-                           |
-              +------------+------------+
-              |            |            |
-              v            v            v
-           Student      Professor       HOD
-              |            |            |
-              v            v            v
-         Student UI   Professor UI    HOD UI
+                         Login Portal
+                              |
+                              v
+                       Authentication
+                              |
+                              v
+                         Role Check
+                              |
+          +-------------------+-------------------+
+          |                   |                   |
+          v                   v                   v
+       Student            Professor              HOD
+          |                   |                   |
+          v                   v                   v
+   Student Dashboard   Professor Dashboard   HOD Dashboard
+
+                              |
+                              v
+                            Admin
+                              |
+                              v
+                       Admin Dashboard
 ```
 
 ---
@@ -584,33 +652,23 @@ Passwords are hashed using bcrypt before being stored in the database.
 
 # Screenshots
 
-## 1. Login Portal
+## 1. Single Login Portal
 
-The application provides a centralized login portal for authentication.
+The application uses a single centralized login portal.
+
+The user's role is determined after authentication, and the user is redirected to the appropriate dashboard.
 
 <p align="center">
   <img
-    src="https://github.com/user-attachments/assets/7f038083-eb7f-40ff-b7e7-a0535ae762d8"
+    src="https://github.com/user-attachments/assets/7832cd12-985c-4e0c-bc52-23ae9d284e63"
     width="900"
-    alt="Login Portal"
+    alt="Single Login Portal"
   >
 </p>
 
 ---
 
-## 2. Admin Login
-
-<p align="center">
-  <img
-    src="https://github.com/user-attachments/assets/67d8ef87-7935-4cf5-bdcc-4b7fed11fa8c"
-    width="900"
-    alt="Admin Login"
-  >
-</p>
-
----
-
-## 3. Admin Dashboard
+## 2. Admin Dashboard
 
 <p align="center">
   <img
@@ -622,7 +680,7 @@ The application provides a centralized login portal for authentication.
 
 ---
 
-## 4. Student Dashboard
+## 3. Student Dashboard
 
 <p align="center">
   <img
@@ -634,7 +692,7 @@ The application provides a centralized login portal for authentication.
 
 ---
 
-## 5. Professor Dashboard
+## 4. Professor Dashboard
 
 <p align="center">
   <img
@@ -646,7 +704,7 @@ The application provides a centralized login portal for authentication.
 
 ---
 
-## 6. HOD Dashboard
+## 5. HOD Dashboard
 
 <p align="center">
   <img
@@ -658,7 +716,7 @@ The application provides a centralized login portal for authentication.
 
 ---
 
-## 7. Student Assignment Tracking
+## 6. Student Assignment Tracking
 
 Students can track the current status and complete history of their assignments.
 
@@ -672,7 +730,7 @@ Students can track the current status and complete history of their assignments.
 
 ---
 
-## 8. Professor Assignment Review
+## 7. Professor Assignment Review
 
 Professors can review submitted assignments, add remarks, and approve or reject assignments.
 
@@ -848,15 +906,26 @@ The application implements:
 
 ---
 
+# Repository
+
+**GitHub Repository:**  
+https://github.com/mr28Verma/Assignment-Approval-System/
+
+---
+
+# Live Application
+
+**Live Demo:**  
+https://university-assignment-approval-system-pdoh.onrender.com/
+
+---
+
 # Author
 
 **Saksham Verma**
 
 GitHub:  
 https://github.com/mr28Verma
-
-Live Application:  
-https://university-assignment-approval-system-pdoh.onrender.com/
 
 ---
 

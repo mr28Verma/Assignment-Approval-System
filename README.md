@@ -9,9 +9,9 @@ The system allows students to submit assignments, professors to review and appro
 ## Live Demo
 
 **Live Application:**  
-https://assignment-approval-system-eight.vercel.app/
+https://university-assignment-approval-system-pdoh.onrender.com/
 
-[Open Live Application](https://assignment-approval-system-eight.vercel.app/)
+[Open Live Application](https://university-assignment-approval-system-pdoh.onrender.com/)
 
 The deployed application provides separate Student and Admin portals for accessing the assignment management system.
 

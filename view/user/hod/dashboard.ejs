@@ -62,7 +62,9 @@
                     id="userProfileBtn"
                 >
 
+
                     <div class="user-details">
+
 
                         <div class="user-name">
 
@@ -77,10 +79,12 @@
 
                         </div>
 
+
                     </div>
 
 
                     <div class="user-avatar">
+
 
                         <img
                             src="<%= profilePic %>"
@@ -88,7 +92,9 @@
                             onerror="this.style.display='none'"
                         >
 
+
                     </div>
+
 
                 </div>
 
@@ -134,26 +140,6 @@
 
             </div>
 
-        </div>
-
-
-
-        <!-- HEADER CONTENT -->
-
-        <div class="header-content">
-
-
-            <a
-                href="/hod/manage/faculty"
-                class="upload-button"
-            >
-
-                <i class="fa-solid fa-user-gear"></i>
-
-                Manage Faculty
-
-            </a>
-
 
         </div>
 
@@ -173,17 +159,20 @@
 
         <div class="metric-card draft">
 
+
             <div class="count">
 
                 <%= pending %>
 
             </div>
 
+
             <div class="label">
 
                 Pending Approvals
 
             </div>
+
 
         </div>
 
@@ -193,17 +182,20 @@
 
         <div class="metric-card submitted">
 
+
             <div class="count">
 
                 <%= faculty %>
 
             </div>
 
+
             <div class="label">
 
                 Total Faculty
 
             </div>
+
 
         </div>
 
@@ -213,17 +205,20 @@
 
         <div class="metric-card approved">
 
+
             <div class="count">
 
                 <%= approved %>
 
             </div>
 
+
             <div class="label">
 
                 Approved Submissions
 
             </div>
+
 
         </div>
 
@@ -233,17 +228,20 @@
 
         <div class="metric-card rejected">
 
+
             <div class="count">
 
                 <%= rejected %>
 
             </div>
 
+
             <div class="label">
 
                 Rejected / Returned
 
             </div>
+
 
         </div>
 
@@ -292,6 +290,7 @@
             method="POST"
         >
 
+
             <div class="filter-controls">
 
 
@@ -307,25 +306,41 @@
                     id="statusFilter"
                 >
 
+
                     <option value="all">
+
                         All Status
+
                     </option>
+
 
                     <option value="pending">
+
                         Pending
+
                     </option>
+
 
                     <option value="forwarded">
+
                         Forwarded
+
                     </option>
+
 
                     <option value="approved">
+
                         Approved
+
                     </option>
 
+
                     <option value="rejected">
+
                         Rejected
+
                     </option>
+
 
                 </select>
 
@@ -341,6 +356,7 @@
 
 
             </div>
+
 
         </form>
 
@@ -360,29 +376,48 @@
 
                 <tr>
 
+
                     <th>
+
                         Assignment Title
+
                     </th>
 
+
                     <th>
+
                         Student Name
+
                     </th>
 
+
                     <th>
+
                         Category
+
                     </th>
 
+
                     <th>
+
                         Status
+
                     </th>
 
+
                     <th>
+
                         Submission Date
+
                     </th>
 
+
                     <th>
+
                         Actions
+
                     </th>
+
 
                 </tr>
 
@@ -570,11 +605,15 @@
 
                     <tr class="no-assignments">
 
-                        <td colspan="6">
+
+                        <td
+                            colspan="6"
+                        >
 
                             No submissions found.
 
                         </td>
+
 
                     </tr>
 
@@ -846,7 +885,9 @@ document.addEventListener(
 
 
 
-                        // Backend URL
+                        // =================================================
+                        // BACKEND URL
+                        // =================================================
 
                         reviewForm.action =
                             `/hod/assignment/review/${assignmentId}`;

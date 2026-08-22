@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professor Review Dashboard</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <link rel="stylesheet" href="/css/professorcss/dashboard.css">
+
     <style>
         :root {
             --color-cream: #fdf8f4;
@@ -39,12 +42,39 @@
 
         body {
             font-family: "Georgia", serif;
-            background: 
-                linear-gradient(135deg, transparent 0%, rgba(224, 122, 95, 0.03) 25%, transparent 50%, rgba(212, 187, 162, 0.04) 75%, transparent 100%),
-                linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4),
-                linear-gradient(45deg, #fdf8f4 25%, transparent 25%, transparent 75%, #fdf8f4 75%, #fdf8f4) 20px 20px,
+            background:
+                linear-gradient(
+                    135deg,
+                    transparent 0%,
+                    rgba(224, 122, 95, 0.03) 25%,
+                    transparent 50%,
+                    rgba(212, 187, 162, 0.04) 75%,
+                    transparent 100%
+                ),
+                linear-gradient(
+                    45deg,
+                    #fdf8f4 25%,
+                    transparent 25%,
+                    transparent 75%,
+                    #fdf8f4 75%,
+                    #fdf8f4
+                ),
+                linear-gradient(
+                    45deg,
+                    #fdf8f4 25%,
+                    transparent 25%,
+                    transparent 75%,
+                    #fdf8f4 75%,
+                    #fdf8f4
+                ) 20px 20px,
                 linear-gradient(to bottom, #fdf8f4, #f8f0e8);
-            background-size: 100% 100%, 40px 40px, 40px 40px, 100% 100%;
+
+            background-size:
+                100% 100%,
+                40px 40px,
+                40px 40px,
+                100% 100%;
+
             margin: 0;
             padding: 3mm;
             min-height: 100vh;
@@ -53,6 +83,7 @@
         }
 
         /* Alert Banner */
+
         .alert-banner {
             background: var(--status-approved);
             color: white;
@@ -63,7 +94,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         }
 
         .alert-banner button {
@@ -76,6 +107,7 @@
         }
 
         /* Main Container */
+
         .dashboard-container {
             width: 100%;
             max-width: 100%;
@@ -88,6 +120,7 @@
         }
 
         /* Header */
+
         .dashboard-header {
             border-bottom: 3px solid var(--color-light-terracotta);
             margin-bottom: 2rem;
@@ -106,7 +139,8 @@
             margin: 0;
         }
 
-        /* User Profile Dropdown Styles */
+        /* User Profile */
+
         .user-profile {
             position: relative;
         }
@@ -141,12 +175,14 @@
         }
 
         /* Avatar */
+
         .user-avatar {
             width: 40px;
             height: 40px;
             background-color: var(--color-terracotta);
             overflow: hidden;
             border-radius: 0;
+
             clip-path: polygon(
                 0 0,
                 calc(100% - 6px) 0,
@@ -166,6 +202,7 @@
         }
 
         /* Dropdown */
+
         .dropdown-menu {
             position: absolute;
             top: 110%;
@@ -217,6 +254,7 @@
         }
 
         /* Metrics Cards */
+
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -265,6 +303,7 @@
         }
 
         /* Recent Section */
+
         .recent-section-header {
             display: flex;
             justify-content: space-between;
@@ -293,6 +332,7 @@
         }
 
         /* Filters */
+
         .filter-controls {
             display: flex;
             gap: 20px;
@@ -331,6 +371,7 @@
         }
 
         /* Table */
+
         .submission-table {
             width: 100%;
             border-collapse: collapse;
@@ -415,6 +456,12 @@
             font-size: 0.9rem;
         }
 
+        .approved-text {
+            color: var(--status-approved);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
         .no-data {
             text-align: center;
             padding: 30px;
@@ -423,7 +470,9 @@
         }
 
         /* Responsive Layout */
+
         @media(max-width: 900px) {
+
             .dashboard-container {
                 padding: 1.5rem 1rem;
             }
@@ -515,153 +564,423 @@
 </head>
 
 <body>
+
     <div class="dashboard-container">
 
         <% if (typeof success !== 'undefined' && success === 'forwarded') { %>
+
             <div class="alert-banner" id="successBanner">
-                <span><i class="fa-solid fa-circle-check"></i> Assignment successfully forwarded to Head of Department (HOD).</span>
-                <button onclick="document.getElementById('successBanner').style.display='none'">&times;</button>
+
+                <span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    Assignment successfully forwarded to Head of Department (HOD).
+                </span>
+
+                <button
+                    onclick="document.getElementById('successBanner').style.display='none'">
+                    &times;
+                </button>
+
             </div>
+
         <% } %>
 
+
+        <!-- HEADER -->
+
         <div class="dashboard-header">
+
             <div class="header-top">
+
                 <h1>Professor Review Dashboard</h1>
+
                 <div class="user-profile">
+
                     <div class="user-info" id="userProfileBtn">
+
                         <div style="text-align: right;">
-                            <div class="user-name">Dr. <%= name %></div>
-                            <div class="user-role">PROFESSOR</div>
+
+                            <div class="user-name">
+                                Dr. <%= name %>
+                            </div>
+
+                            <div class="user-role">
+                                PROFESSOR
+                            </div>
+
                         </div>
+
                         <div class="user-avatar">
-                            <img src="<%= profilePic %>" alt="Professor's Profile Picture" onerror="this.src='<%= profilePic %>'">
+
+                            <img
+                                src="<%= profilePic %>"
+                                alt="Professor's Profile Picture"
+                                onerror="this.src='<%= profilePic %>'">
+
                         </div>
+
                     </div>
+
+
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="/professor/settings?name=<%= name %>" class="dropdown-item">
-                            <i class="fa-solid fa-gear"></i> Settings
+
+                        <a
+                            href="/professor/settings?name=<%= name %>"
+                            class="dropdown-item">
+
+                            <i class="fa-solid fa-gear"></i>
+                            Settings
+
                         </a>
-                        <a href="/auth/logout" class="dropdown-item logout-item">
-                            <i class="fa-solid fa-power-off"></i> Logout
+
+
+                        <a
+                            href="/auth/logout"
+                            class="dropdown-item logout-item">
+
+                            <i class="fa-solid fa-power-off"></i>
+                            Logout
+
                         </a>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
+
+        <!-- METRICS -->
 
         <div class="metrics-grid">
+
             <div class="metric-card pending">
-                <div class="count"><%= review %></div>
-                <div class="label">Pending Reviews</div>
+
+                <div class="count">
+                    <%= review %>
+                </div>
+
+                <div class="label">
+                    Pending Reviews
+                </div>
+
             </div>
+
 
             <div class="metric-card submitted">
-                <div class="count"><%= totalSubmission %></div>
-                <div class="label">Total Submitted</div>
+
+                <div class="count">
+                    <%= totalSubmission %>
+                </div>
+
+                <div class="label">
+                    Total Submitted
+                </div>
+
             </div>
 
+
             <div class="metric-card approved">
-                <div class="count"><%= approved %></div>
-                <div class="label">Already Approved</div>
+
+                <div class="count">
+                    <%= approved %>
+                </div>
+
+                <div class="label">
+                    Already Approved
+                </div>
+
             </div>
+
         </div>
+
+
+        <!-- ASSIGNMENTS -->
 
         <div class="recent-section">
 
             <div class="recent-section-header">
-                <h2>Assignments Awaiting Review</h2>
-                <a href="/professor/assignment/all" class="view-all-link">View All →</a>
+
+                <h2>
+                    Assignments Awaiting Review
+                </h2>
+
+                <a
+                    href="/professor/assignment/all"
+                    class="view-all-link">
+
+                    View All →
+
+                </a>
+
             </div>
 
-            <form action="/professor/filterAssignment" method="post">
+
+            <!-- FILTER -->
+
+            <form
+                action="/professor/filterAssignment"
+                method="post">
+
                 <div class="filter-controls">
+
                     <div class="filter-group">
-                        <label for="statusFilter">Filter by Status:</label>
-                        <select name="status" id="statusFilter">
-                            <option value="all">All Assignments</option>
-                            <option value="pending">Pending Review</option>
-                            <option value="approved">Approved</option>
-                            <option value="forwarded">Forwarded to HOD</option>
-                            <option value="rejected">Rejected</option>
+
+                        <label for="statusFilter">
+                            Filter by Status:
+                        </label>
+
+
+                        <select
+                            name="status"
+                            id="statusFilter">
+
+                            <option value="all">
+                                All Assignments
+                            </option>
+
+                            <option value="pending">
+                                Pending Review
+                            </option>
+
+                            <option value="approved">
+                                Approved
+                            </option>
+
+                            <option value="forwarded">
+                                Forwarded to HOD
+                            </option>
+
+                            <option value="rejected">
+                                Rejected
+                            </option>
+
                         </select>
+
                     </div>
-                    <button type="submit" class="apply-btn">Apply</button>
+
+
+                    <button
+                        type="submit"
+                        class="apply-btn">
+
+                        Apply
+
+                    </button>
+
                 </div>
+
             </form>
 
-            <table class="submission-table" id="assignmentTable">
+
+            <!-- TABLE -->
+
+            <table
+                class="submission-table"
+                id="assignmentTable">
+
                 <thead>
+
                     <tr>
-                        <th>Assignment Title</th>
-                        <th>Student Name</th>
-                        <th>Status</th>
-                        <th>Submitted On</th>
-                        <th>Review Actions</th>
+
+                        <th>
+                            Assignment Title
+                        </th>
+
+                        <th>
+                            Student Name
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Submitted On
+                        </th>
+
+                        <th>
+                            Review Actions
+                        </th>
+
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
                     <% if (!assignment || assignment.length === 0) { %>
 
-                    <tr class="no-assignments">
-                        <td colspan="5" class="no-data">No Assignments Found</td>
-                    </tr>
+                        <tr class="no-assignments">
+
+                            <td
+                                colspan="5"
+                                class="no-data">
+
+                                No Assignments Found
+
+                            </td>
+
+                        </tr>
 
                     <% } else { %>
 
-                    <% assignment.forEach(a => { %>
 
-                    <tr>
-                        <td data-label="Title"><%= a.title %></td>
+                        <% assignment.forEach(a => { %>
 
-                        <td data-label="Student"><%= a.student_name %></td>
+                            <tr>
 
-                        <td data-label="Status">
-                            <span class="status-badge badge-<%= a.status %>">
-                                <%= a.status %>
-                            </span>
-                        </td>
+                                <td data-label="Title">
+                                    <%= a.title %>
+                                </td>
 
-                        <td data-label="Submitted"><%= a.submit %></td>
 
-                        <td data-label="Review Actions" class="action-buttons-cell">
-                            <% if (a.status === "approved") { %>
-                                <a href="/professor/forward/<%= a._id %>" class="review-btn forward-btn">Forward</a>
-                            <% } else if (a.status === "forwarded") { %>
-                                <span class="forwarded-text"><i class="fa-solid fa-check-double"></i> Sent to HOD</span>
-                            <% } else { %>
-                                <a href="/professor/review/<%= a._id %>" class="review-btn">Review</a>
-                            <% } %>
-                        </td>
-                    </tr>
+                                <td data-label="Student">
+                                    <%= a.student_name %>
+                                </td>
 
-                    <% }) %>
+
+                                <td data-label="Status">
+
+                                    <span
+                                        class="status-badge badge-<%= a.status %>">
+
+                                        <%= a.status %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <td data-label="Submitted">
+                                    <%= a.submit %>
+                                </td>
+
+
+                                <td
+                                    data-label="Review Actions"
+                                    class="action-buttons-cell">
+
+
+                                    <!--
+                                        FINAL APPROVAL LOGIC
+
+                                        Case 1:
+                                        Professor approved but NOT forwarded
+                                        -> Show Forward button
+
+                                        Case 2:
+                                        Assignment was forwarded to HOD
+                                        -> Show Sent to HOD
+
+                                        Case 3:
+                                        Assignment was forwarded earlier
+                                        AND is now approved again
+                                        -> HOD has finally approved it
+                                        -> Do NOT show Forward
+                                    -->
+
+
+                                    <% if (a.status === "approved" && a.alreadyForwarded) { %>
+
+                                        <span class="approved-text">
+
+                                            <i class="fa-solid fa-circle-check"></i>
+
+                                            Approved by HOD
+
+                                        </span>
+
+
+                                    <% } else if (a.status === "approved" && !a.alreadyForwarded) { %>
+
+                                        <a
+                                            href="/professor/forward/<%= a._id %>"
+                                            class="review-btn forward-btn">
+
+                                            Forward
+
+                                        </a>
+
+
+                                    <% } else if (a.status === "forwarded") { %>
+
+                                        <span class="forwarded-text">
+
+                                            <i class="fa-solid fa-check-double"></i>
+
+                                            Sent to HOD
+
+                                        </span>
+
+
+                                    <% } else { %>
+
+                                        <a
+                                            href="/professor/review/<%= a._id %>"
+                                            class="review-btn">
+
+                                            Review
+
+                                        </a>
+
+                                    <% } %>
+
+
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
 
                     <% } %>
 
                 </tbody>
+
             </table>
 
         </div>
+
     </div>
 
+
+    <!-- PROFILE DROPDOWN SCRIPT -->
+
     <script>
+
         document.addEventListener('DOMContentLoaded', () => {
-            const userProfileBtn = document.getElementById('userProfileBtn');
-            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            const userProfileBtn =
+                document.getElementById('userProfileBtn');
+
+            const dropdownMenu =
+                document.getElementById('dropdownMenu');
+
 
             userProfileBtn.addEventListener('click', (e) => {
+
                 e.stopPropagation();
+
                 dropdownMenu.classList.toggle('show');
+
             });
 
+
             document.addEventListener('click', (e) => {
+
                 if (!userProfileBtn.contains(e.target)) {
+
                     dropdownMenu.classList.remove('show');
+
                 }
+
             });
+
         });
+
     </script>
 
 </body>

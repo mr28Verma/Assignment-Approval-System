@@ -63,7 +63,9 @@ async function professorDashboard(req, res) {
 
     try {
 
-        const user = await getCurrentProfessor(req);
+        const user =
+            await getCurrentProfessor(req);
+
 
         if (!user) {
             return res.redirect('/auth/login');
@@ -71,15 +73,77 @@ async function professorDashboard(req, res) {
 
 
         // Always use CURRENT name from database
-        const name = user.name;
+        const name =
+            user.name;
 
 
-        const submittedAssignment =
+        // =====================================================
+        // GET PROFESSOR ASSIGNMENTS
+        // =====================================================
+
+        let submittedAssignment =
             await Assignment.find({
                 professor: name
             })
-            .sort({ createdAt: -1 });
+            .sort({
+                createdAt: -1
+            });
 
+
+        // =====================================================
+        // GET TRACKER INFORMATION
+        // =====================================================
+
+        const assignmentIds =
+            submittedAssignment.map(
+                assignment => assignment._id
+            );
+
+
+        const trackers =
+            await Tracker.find({
+                assignmentId: {
+                    $in: assignmentIds
+                }
+            });
+
+
+        // =====================================================
+        // ADD alreadyForwarded TO EACH ASSIGNMENT
+        // =====================================================
+
+        submittedAssignment =
+            submittedAssignment.map(
+                assignment => {
+
+                    const tracker =
+                        trackers.find(
+                            tracker =>
+                                tracker.assignmentId.toString() ===
+                                assignment._id.toString()
+                        );
+
+
+                    const alreadyForwarded =
+                        tracker?.history?.some(
+                            item =>
+                                item.status === "forwarded"
+                        ) || false;
+
+
+                    return {
+                        ...assignment.toObject(),
+
+                        alreadyForwarded
+                    };
+
+                }
+            );
+
+
+        // =====================================================
+        // COUNTS
+        // =====================================================
 
         const review =
             await Assignment.countDocuments({
@@ -109,6 +173,10 @@ async function professorDashboard(req, res) {
             });
 
 
+        // =====================================================
+        // RENDER DASHBOARD
+        // =====================================================
+
         res.render(
             'user/professor/dashboard',
             {
@@ -137,6 +205,7 @@ async function professorDashboard(req, res) {
             "Professor Dashboard Error:",
             error
         );
+
 
         res.status(500).send(
             "Unable to load professor dashboard."

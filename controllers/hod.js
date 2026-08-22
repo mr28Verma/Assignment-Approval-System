@@ -82,7 +82,7 @@ async function hodDashboard(req, res) {
             })
                 .sort({
                     createdAt: -1
-                });
+                }).limit(5);
 
 
         console.log(

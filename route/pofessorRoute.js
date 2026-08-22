@@ -472,7 +472,6 @@ router.get(
     }
 );
 
-
 // =====================================================
 // FORWARD ASSIGNMENT TO HOD
 // =====================================================
@@ -538,6 +537,10 @@ router.get(
             }
 
 
+            // =====================================================
+            // CHECK ASSIGNMENT STATUS
+            // =====================================================
+
             if (assignment.status !== "approved") {
 
                 return res.status(400).send(
@@ -546,6 +549,39 @@ router.get(
 
             }
 
+
+            // =====================================================
+            // CHECK TRACKER HISTORY
+            // =====================================================
+
+            const tracker =
+                await Tracker.findOne({
+                    assignmentId: id
+                });
+
+
+            const alreadyForwarded =
+                tracker?.history?.some(
+                    item => item.status === "forwarded"
+                );
+
+
+            // =====================================================
+            // PREVENT FORWARDING AGAIN AFTER HOD APPROVAL
+            // =====================================================
+
+            if (alreadyForwarded) {
+
+                return res.status(400).send(
+                    "This assignment has already been forwarded to HOD."
+                );
+
+            }
+
+
+            // =====================================================
+            // FIND HOD
+            // =====================================================
 
             const hod =
                 await User.findOne({
@@ -568,12 +604,20 @@ router.get(
             }
 
 
+            // =====================================================
+            // CHANGE ASSIGNMENT STATUS
+            // =====================================================
+
             assignment.status =
                 "forwarded";
 
 
             await assignment.save();
 
+
+            // =====================================================
+            // UPDATE TRACKER
+            // =====================================================
 
             await Tracker.updateOne(
 
@@ -604,6 +648,10 @@ router.get(
 
             );
 
+
+            // =====================================================
+            // SEND EMAIL TO HOD
+            // =====================================================
 
             await sendMail(
 
@@ -666,6 +714,7 @@ router.get(
                             to review the assignment.
                         </p>
 
+
                     </div>
 
                 </div>
@@ -673,6 +722,10 @@ router.get(
 
             );
 
+
+            // =====================================================
+            // REDIRECT TO PROFESSOR DASHBOARD
+            // =====================================================
 
             res.redirect(
                 '/professor/dashboard?success=forwarded'
@@ -685,6 +738,7 @@ router.get(
                 "Forward Assignment Error:",
                 err
             );
+
 
             res.status(500).send(
                 "An error occurred while forwarding the assignment."
